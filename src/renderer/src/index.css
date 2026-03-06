@@ -1,0 +1,345 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --background: 264 58% 97%;
+    --foreground: 268 24% 18%;
+    --card: 270 100% 99%;
+    --card-foreground: 268 24% 18%;
+    --primary: 269 52% 49%;
+    --primary-foreground: 270 100% 99%;
+    --secondary: 265 50% 92%;
+    --secondary-foreground: 268 28% 28%;
+    --muted: 264 42% 94%;
+    --muted-foreground: 266 14% 44%;
+    --accent: 276 58% 90%;
+    --accent-foreground: 270 31% 27%;
+    --destructive: 353 70% 54%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 267 31% 84%;
+    --input: 267 31% 84%;
+    --ring: 269 52% 49%;
+    --editor-surface: 267 80% 98%;
+    --editor-surface-elevated: 270 100% 99%;
+    --preview-surface: 264 56% 96%;
+    --scrollbar-track: 264 42% 92%;
+    --scrollbar-thumb: 268 31% 74%;
+    --scrollbar-thumb-hover: 269 40% 63%;
+    --scrollbar-corner: 264 42% 92%;
+    --success-soft: 149 48% 92%;
+    --success-foreground: 150 49% 30%;
+    --editor-text: hsl(var(--foreground));
+    --editor-cursor: hsl(var(--primary));
+    --editor-active-line: hsl(var(--primary) / 0.07);
+    --editor-selection: hsl(var(--primary) / 0.22);
+    --editor-font-family: "IBM Plex Mono", monospace;
+    --editor-font-size: 16px;
+    --preview-font-family: "IBM Plex Sans", sans-serif;
+    --preview-font-size: 16px;
+    --app-shell-overlay:
+      radial-gradient(
+        circle at top,
+        rgba(169, 133, 246, 0.18),
+        transparent 38%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(238, 230, 255, 0.95),
+        rgba(247, 243, 255, 0.99)
+      );
+    --app-grain-opacity: 0.5;
+    --texture-grain: radial-gradient(
+      circle at 1px 1px,
+      rgba(112, 83, 173, 0.09) 1px,
+      transparent 0
+    );
+    --shadow-panel: 0 18px 44px hsl(var(--primary) / 0.16);
+    --mermaid-primary-color: #dbcafc;
+    --mermaid-primary-text-color: #382457;
+    --mermaid-primary-border-color: #8663d1;
+    --mermaid-line-color: #8663d1;
+    --mermaid-secondary-color: #eee5ff;
+    --mermaid-tertiary-color: #f8f4ff;
+    --mermaid-edge-label-background: #f8f4ff;
+    --radius: 1.35rem;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 270 36% 9%;
+    --foreground: 272 38% 89%;
+    --card: 270 30% 12%;
+    --card-foreground: 272 38% 89%;
+    --primary: 269 82% 74%;
+    --primary-foreground: 270 40% 11%;
+    --secondary: 271 23% 18%;
+    --secondary-foreground: 271 31% 82%;
+    --muted: 270 20% 15%;
+    --muted-foreground: 270 15% 63%;
+    --accent: 276 26% 22%;
+    --accent-foreground: 273 36% 86%;
+    --destructive: 353 74% 61%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 270 18% 25%;
+    --input: 270 18% 25%;
+    --ring: 269 82% 74%;
+    --editor-surface: 271 31% 11%;
+    --editor-surface-elevated: 273 32% 14%;
+    --preview-surface: 270 27% 10%;
+    --scrollbar-track: 271 22% 16%;
+    --scrollbar-thumb: 270 26% 36%;
+    --scrollbar-thumb-hover: 269 42% 56%;
+    --scrollbar-corner: 271 22% 16%;
+    --success-soft: 151 38% 18%;
+    --success-foreground: 149 47% 76%;
+    --editor-text: hsl(var(--foreground));
+    --editor-cursor: hsl(var(--primary));
+    --editor-active-line: hsl(var(--primary) / 0.1);
+    --editor-selection: hsl(var(--primary) / 0.24);
+    --app-shell-overlay:
+      radial-gradient(
+        circle at top,
+        rgba(150, 112, 235, 0.32),
+        transparent 44%
+      ),
+      linear-gradient(180deg, rgba(58, 38, 104, 0.16), rgba(16, 12, 26, 0.92));
+    --app-grain-opacity: 0.2;
+    --texture-grain: radial-gradient(
+      circle at 1px 1px,
+      rgba(155, 127, 220, 0.08) 1px,
+      transparent 0
+    );
+    --shadow-panel: 0 18px 44px hsl(var(--primary) / 0.2);
+    --mermaid-primary-color: #382553;
+    --mermaid-primary-text-color: #eadfff;
+    --mermaid-primary-border-color: #b293f4;
+    --mermaid-line-color: #b293f4;
+    --mermaid-secondary-color: #241835;
+    --mermaid-tertiary-color: #181123;
+    --mermaid-edge-label-background: #181123;
+  }
+
+  * {
+    @apply border-border;
+    scrollbar-width: 8px;
+    scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+  }
+
+  *::-webkit-scrollbar-track {
+    background: hsl(var(--scrollbar-track));
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--scrollbar-thumb)) 0%,
+      hsl(var(--scrollbar-thumb-hover)) 100%
+    );
+    border: 3px solid hsl(var(--scrollbar-track));
+    border-radius: 999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--scrollbar-thumb-hover));
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: hsl(var(--scrollbar-corner));
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  button {
+    @apply select-none;
+  }
+
+  a {
+    @apply transition-colors;
+  }
+}
+
+@layer components {
+  .app-shell-overlay {
+    @apply pointer-events-none absolute inset-0;
+    background-image: var(--app-shell-overlay);
+  }
+
+  .app-grain-overlay {
+    @apply pointer-events-none absolute inset-0 bg-grain;
+    background-size: 18px 18px;
+    opacity: var(--app-grain-opacity);
+  }
+
+  .app-editor-pane {
+    @apply relative flex-1 overflow-hidden;
+    background: hsl(var(--editor-surface));
+  }
+
+  .app-editor-top-fade {
+    @apply absolute inset-x-0 top-0 z-10 h-14;
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--editor-surface-elevated)) 0%,
+      transparent 100%
+    );
+  }
+
+  .app-preview-pane {
+    @apply flex-1 overflow-auto;
+    background: hsl(var(--preview-surface));
+  }
+
+  .themed-scrollbar {
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+  }
+
+  .themed-scrollbar::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  .themed-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--scrollbar-track));
+  }
+
+  .themed-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--scrollbar-thumb)) 0%,
+      hsl(var(--scrollbar-thumb-hover)) 100%
+    );
+    border: 3px solid hsl(var(--scrollbar-track));
+    border-radius: 999px;
+  }
+
+  .themed-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--scrollbar-thumb-hover));
+  }
+
+  .mermaid-figure {
+    @apply my-8 overflow-hidden rounded-[1.6rem] border border-border p-6;
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--secondary)) 100%
+    );
+    box-shadow: var(--shadow-panel);
+  }
+
+  .mermaid-figure svg {
+    @apply h-auto max-w-full;
+  }
+
+  .mermaid-error::after {
+    content: attr(data-error);
+    @apply mt-3 block rounded-xl bg-destructive/10 px-3 py-2 text-sm text-destructive;
+  }
+
+  .notice-pill {
+    @apply rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  .notice-pill-success {
+    background: hsl(var(--success-soft));
+    color: hsl(var(--success-foreground));
+  }
+
+  .notice-pill-error {
+    background: hsl(var(--destructive) / 0.1);
+    color: hsl(var(--destructive));
+  }
+
+  .notice-pill-info {
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  .preview-prose {
+    @apply prose max-w-none;
+    font-family: var(--preview-font-family);
+    font-size: var(--preview-font-size);
+    --tw-prose-body: hsl(var(--foreground) / 0.86);
+    --tw-prose-headings: hsl(var(--foreground));
+    --tw-prose-lead: hsl(var(--muted-foreground));
+    --tw-prose-links: hsl(var(--primary));
+    --tw-prose-bold: hsl(var(--foreground));
+    --tw-prose-counters: hsl(var(--muted-foreground));
+    --tw-prose-bullets: hsl(var(--primary) / 0.42);
+    --tw-prose-hr: hsl(var(--border));
+    --tw-prose-quotes: hsl(var(--foreground) / 0.78);
+    --tw-prose-quote-borders: hsl(var(--primary) / 0.28);
+    --tw-prose-captions: hsl(var(--muted-foreground));
+    --tw-prose-code: hsl(var(--foreground));
+    --tw-prose-pre-code: hsl(var(--foreground));
+    --tw-prose-pre-bg: hsl(var(--secondary) / 0.72);
+    --tw-prose-th-borders: hsl(var(--border));
+    --tw-prose-td-borders: hsl(var(--border));
+    --tw-prose-invert-body: hsl(var(--foreground) / 0.88);
+    --tw-prose-invert-headings: hsl(var(--foreground));
+    --tw-prose-invert-lead: hsl(var(--muted-foreground));
+    --tw-prose-invert-links: hsl(var(--primary));
+    --tw-prose-invert-bold: hsl(var(--foreground));
+    --tw-prose-invert-counters: hsl(var(--muted-foreground));
+    --tw-prose-invert-bullets: hsl(var(--primary) / 0.44);
+    --tw-prose-invert-hr: hsl(var(--border));
+    --tw-prose-invert-quotes: hsl(var(--foreground) / 0.8);
+    --tw-prose-invert-quote-borders: hsl(var(--primary) / 0.34);
+    --tw-prose-invert-captions: hsl(var(--muted-foreground));
+    --tw-prose-invert-code: hsl(var(--foreground));
+    --tw-prose-invert-pre-code: hsl(var(--foreground));
+    --tw-prose-invert-pre-bg: hsl(var(--secondary) / 0.72);
+    --tw-prose-invert-th-borders: hsl(var(--border));
+    --tw-prose-invert-td-borders: hsl(var(--border));
+  }
+
+  .preview-prose a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .preview-prose a:hover {
+    color: hsl(var(--primary) / 0.82);
+  }
+
+  .preview-prose code::before,
+  .preview-prose code::after {
+    content: none;
+  }
+
+  .preview-prose :not(pre) > code {
+    @apply rounded-md px-1.5 py-0.5 font-normal;
+    background: hsl(var(--secondary) / 0.82);
+  }
+
+  .preview-prose code,
+  .preview-prose pre {
+    font-family: var(--editor-font-family);
+  }
+
+  .preview-prose pre {
+    @apply overflow-x-auto rounded-[1.5rem] border border-border;
+    box-shadow: inset 0 1px 0 hsl(var(--card) / 0.6);
+  }
+
+  .preview-prose blockquote {
+    @apply rounded-2xl py-1 pr-4;
+    background: hsl(var(--secondary) / 0.36);
+  }
+}
+
+
