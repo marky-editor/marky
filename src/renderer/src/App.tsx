@@ -42,6 +42,16 @@ export function App() {
   const viewMode = useWorkspaceStore((state) => state.viewMode);
 
   useScrollSync(editorViewRef, previewRef, viewMode);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      if (viewMode === 'preview') {
+        previewRef.current?.focus();
+      } else {
+        editorViewRef.current?.focus();
+      }
+    });
+  }, [viewMode]);
   const setContent = useWorkspaceStore((state) => state.setContent);
   const setViewMode = useWorkspaceStore((state) => state.setViewMode);
   const isDirty = useWorkspaceStore(selectIsDirty);
@@ -180,7 +190,7 @@ export function App() {
           )}
 
           {viewMode !== 'editor' && (
-            <section ref={previewRef} className="app-preview-pane">
+            <section ref={previewRef} className="app-preview-pane focus:outline-none" tabIndex={-1}>
               <div data-preview-root className="mx-auto max-w-3xl px-8 py-10">
                 <PreviewPane markdown={activeDocument.content} />
               </div>
