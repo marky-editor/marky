@@ -18,6 +18,7 @@ import {
   normalizeTableSpacing,
 } from '../lib/table-formatting';
 import { tableNavigationExtension } from '../lib/table-navigation';
+import { formattingKeymap } from '../lib/formatting-keymap';
 
 type EditorPaneProps = {
   value: string;
@@ -78,6 +79,7 @@ export function EditorPane({ value, onChange, onReady }: EditorPaneProps) {
     () => [
       markdown({ base: markdownLanguage }),
       tableNavigationExtension,
+      formattingKeymap,
       EditorView.lineWrapping,
       theme,
       editorStateExtension(setFormatting, setStats),

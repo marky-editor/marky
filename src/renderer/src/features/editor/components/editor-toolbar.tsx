@@ -26,33 +26,43 @@ import {
 } from '../lib/toolbar-actions';
 import { useEditorStore, type FormattingState } from '../store';
 
+const isMac =
+  typeof navigator !== 'undefined' &&
+  (navigator.platform.toLowerCase().includes('mac') ||
+    navigator.userAgent.includes('Mac'));
+
+const mod = isMac ? '⌘' : 'Ctrl';
+
 const toolbarActions: Array<{
   id: ToolbarActionId;
   label: string;
+  shortcut?: string;
   icon: typeof Type;
   formattingKey?: keyof FormattingState;
 }> = [
-  { id: 'bold', label: 'Bold', icon: Type, formattingKey: 'bold' },
-  { id: 'italic', label: 'Italic', icon: SquarePen, formattingKey: 'italic' },
+  { id: 'bold', label: 'Bold', shortcut: `${mod}+B`, icon: Type, formattingKey: 'bold' },
+  { id: 'italic', label: 'Italic', shortcut: `${mod}+I`, icon: SquarePen, formattingKey: 'italic' },
   {
     id: 'strike',
-    label: 'Strike',
+    label: 'Strikethrough',
+    shortcut: `${mod}+Shift+X`,
     icon: Strikethrough,
     formattingKey: 'strikethrough',
   },
-  { id: 'h1', label: 'Heading 1', icon: Heading1, formattingKey: 'heading1' },
-  { id: 'h2', label: 'Heading 2', icon: Heading2, formattingKey: 'heading2' },
-  { id: 'bullet', label: 'Bullets', icon: List, formattingKey: 'bulletList' },
+  { id: 'h1', label: 'Heading 1', shortcut: `${mod}+1`, icon: Heading1, formattingKey: 'heading1' },
+  { id: 'h2', label: 'Heading 2', shortcut: `${mod}+2`, icon: Heading2, formattingKey: 'heading2' },
+  { id: 'bullet', label: 'Bullets', shortcut: `${mod}+Shift+8`, icon: List, formattingKey: 'bulletList' },
   {
     id: 'ordered',
     label: 'Ordered',
+    shortcut: `${mod}+Shift+7`,
     icon: ListOrdered,
     formattingKey: 'orderedList',
   },
-  { id: 'task', label: 'Tasks', icon: ListChecks },
-  { id: 'quote', label: 'Quote', icon: Quote, formattingKey: 'blockquote' },
-  { id: 'code', label: 'Code block', icon: FileCode2, formattingKey: 'code' },
-  { id: 'link', label: 'Link', icon: Link2, formattingKey: 'link' },
+  { id: 'task', label: 'Tasks', shortcut: `${mod}+Shift+9`, icon: ListChecks },
+  { id: 'quote', label: 'Quote', shortcut: `${mod}+Shift+.`, icon: Quote, formattingKey: 'blockquote' },
+  { id: 'code', label: 'Code block', shortcut: `${mod}+E`, icon: FileCode2, formattingKey: 'code' },
+  { id: 'link', label: 'Link', shortcut: `${mod}+K`, icon: Link2, formattingKey: 'link' },
   { id: 'image', label: 'Image', icon: Image },
   { id: 'table', label: 'Table', icon: FileText },
 ];
@@ -237,12 +247,13 @@ export function EditorToolbar({
 
   return (
     <div className="flex flex-1 flex-wrap items-center gap-1">
-      {toolbarActions.map(({ id, label, icon: Icon, formattingKey }) => {
+      {toolbarActions.map(({ id, label, shortcut, icon: Icon, formattingKey }) => {
         if (id === 'table') {
           return <TablePickerButton key={id} editorViewRef={editorViewRef} />;
         }
 
         const isActive = formattingKey ? formatting[formattingKey] : false;
+        const tooltip = shortcut ? `${label} (${shortcut})` : label;
         return (
           <Button
             key={id}
@@ -251,7 +262,7 @@ export function EditorToolbar({
             className="rounded-full text-foreground/75"
             aria-label={label}
             aria-pressed={formattingKey ? isActive : undefined}
-            title={label}
+            title={tooltip}
             onClick={() => handleActionClick(id)}
           >
             <Icon className="size-4" />

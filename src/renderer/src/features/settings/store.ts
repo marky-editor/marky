@@ -5,17 +5,21 @@ import type { AppSettings } from '@shared/types';
 type SettingsStoreState = {
   settings: AppSettings;
   isOpen: boolean;
+  isHelpOpen: boolean;
   setSettings: (settings: AppSettings) => void;
   addRecentFile: (path: string) => AppSettings;
   removeRecentFile: (path: string) => AppSettings;
   clearRecentFiles: () => AppSettings;
   openDialog: () => void;
   closeDialog: () => void;
+  openHelp: () => void;
+  closeHelp: () => void;
 };
 
 export const useSettingsStore = create<SettingsStoreState>((set, get) => ({
   settings: defaultAppSettings,
   isOpen: false,
+  isHelpOpen: false,
   setSettings: (settings) => set({ settings }),
   addRecentFile: (path) => {
     const prev = get().settings.recentFiles;
@@ -41,4 +45,6 @@ export const useSettingsStore = create<SettingsStoreState>((set, get) => ({
   },
   openDialog: () => set({ isOpen: true }),
   closeDialog: () => set({ isOpen: false }),
+  openHelp: () => set({ isHelpOpen: true }),
+  closeHelp: () => set({ isHelpOpen: false }),
 }));

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   BookOpenText,
   ChevronDown,
+  CircleHelp,
   Clock,
   FileDown,
   FileOutput,
@@ -48,6 +49,7 @@ interface TitleBarProps {
   onExportPdf: () => void;
   onExportHtml: () => void;
   onSettings: () => void;
+  onHelp: () => void;
   onViewModeChange: (mode: ViewMode) => void;
 }
 
@@ -336,6 +338,7 @@ export function TitleBar({
   onExportPdf,
   onExportHtml,
   onSettings,
+  onHelp,
   onViewModeChange,
 }: TitleBarProps) {
   const platform = getPlatform();
@@ -347,8 +350,20 @@ export function TitleBar({
     const interval = setInterval(() => {
       void window.marky.windowIsMaximized().then(setIsMaximized);
     }, 500);
-    return () => clearInterval(interval);
-  }, []);
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'F1') {
+        e.preventDefault();
+        onHelp();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onHelp]);
 
   const macControls = (
     <div className="flex items-center gap-1.5" style={noDrag}>
@@ -449,6 +464,16 @@ export function TitleBar({
         aria-label="Settings"
       >
         <Settings className="size-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="rounded-full"
+        onClick={onHelp}
+        aria-label="Keyboard shortcuts"
+        title="Keyboard shortcuts (F1)"
+      >
+        <CircleHelp className="size-4" />
       </Button>
     </div>
   );

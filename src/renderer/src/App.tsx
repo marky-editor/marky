@@ -20,6 +20,7 @@ import {
 } from '@renderer/features/workspace/store';
 import { useSettingsStore } from '@renderer/features/settings/store';
 import { SettingsDialog } from '@renderer/features/settings/components/settings-dialog';
+import { HelpDialog } from '@renderer/features/help/components/help-dialog';
 import {
   toEditorFontFamilyCss,
   toPreviewFontFamilyCss,
@@ -54,7 +55,16 @@ export function App() {
   const settings = useSettingsStore((state) => state.settings);
   const setSettings = useSettingsStore((state) => state.setSettings);
   const openDialog = useSettingsStore((state) => state.openDialog);
+  const openHelp = useSettingsStore((state) => state.openHelp);
+  const isSettingsOpen = useSettingsStore((state) => state.isOpen);
+  const isHelpOpen = useSettingsStore((state) => state.isHelpOpen);
   const recentFiles = useSettingsStore((state) => state.settings.recentFiles);
+
+  useEffect(() => {
+    if (!isSettingsOpen && !isHelpOpen) {
+      requestAnimationFrame(() => editorViewRef.current?.focus());
+    }
+  }, [isSettingsOpen, isHelpOpen]);
 
   useEffect(() => {
     void window.marky.getSettings().then(setSettings);
@@ -143,6 +153,7 @@ export function App() {
           onExportPdf={() => void exportDocument('pdf')}
           onExportHtml={() => void exportDocument('html')}
           onSettings={openDialog}
+          onHelp={openHelp}
           onViewModeChange={setViewMode}
         />
 
@@ -196,6 +207,7 @@ export function App() {
         onInsert={handleInsertDialogSubmit}
       />
       <SettingsDialog />
+      <HelpDialog />
     </div>
   );
 }

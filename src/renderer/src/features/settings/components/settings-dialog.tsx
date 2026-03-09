@@ -263,7 +263,7 @@ export function SettingsDialog() {
           </Button>
         </div>
 
-        <div className="themed-scrollbar min-h-0 space-y-6 overflow-y-auto px-5 py-5">
+        <div className="themed-scrollbar min-h-0 space-y-6 overflow-y-auto px-5 py-5 focus:outline-none" tabIndex={0} ref={(el) => el?.focus()}>
           <Section title="Appearance">
             <div>
               <p className={labelClass}>Theme</p>
