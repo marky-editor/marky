@@ -29,6 +29,7 @@ import {
   insertImage,
   insertLink,
 } from '@renderer/features/editor/lib/toolbar-actions';
+import { useScrollSync } from '@renderer/features/editor/hooks/use-scroll-sync';
 
 export function App() {
   const previewRef = useRef<HTMLDivElement | null>(null);
@@ -39,6 +40,8 @@ export function App() {
 
   const activeDocument = useWorkspaceStore((state) => state.document);
   const viewMode = useWorkspaceStore((state) => state.viewMode);
+
+  useScrollSync(editorViewRef, previewRef, viewMode);
   const setContent = useWorkspaceStore((state) => state.setContent);
   const setViewMode = useWorkspaceStore((state) => state.setViewMode);
   const isDirty = useWorkspaceStore(selectIsDirty);
