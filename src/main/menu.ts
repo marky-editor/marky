@@ -4,66 +4,124 @@ import {
   type MenuItemConstructorOptions,
 } from 'electron';
 import { ipcChannels } from '@shared/contracts';
-import type { MenuAction } from '@shared/types';
+import type { Locale, MenuAction } from '@shared/types';
+
+type MenuLabels = {
+  file: string;
+  new: string;
+  open: string;
+  save: string;
+  saveAs: string;
+  exportHtml: string;
+  exportPdf: string;
+  view: string;
+  editorOnly: string;
+  splitView: string;
+  previewOnly: string;
+};
+
+const labels: Record<Locale, MenuLabels> = {
+  en: {
+    file: 'File',
+    new: 'New',
+    open: 'Open...',
+    save: 'Save',
+    saveAs: 'Save As...',
+    exportHtml: 'Export HTML...',
+    exportPdf: 'Export PDF...',
+    view: 'View',
+    editorOnly: 'Editor Only',
+    splitView: 'Split View',
+    previewOnly: 'Preview Only',
+  },
+  'pt-BR': {
+    file: 'Arquivo',
+    new: 'Novo',
+    open: 'Abrir...',
+    save: 'Salvar',
+    saveAs: 'Salvar como...',
+    exportHtml: 'Exportar HTML...',
+    exportPdf: 'Exportar PDF...',
+    view: 'Visualização',
+    editorOnly: 'Somente Editor',
+    splitView: 'Visualização Dividida',
+    previewOnly: 'Somente Visualização',
+  },
+  es: {
+    file: 'Archivo',
+    new: 'Nuevo',
+    open: 'Abrir...',
+    save: 'Guardar',
+    saveAs: 'Guardar como...',
+    exportHtml: 'Exportar HTML...',
+    exportPdf: 'Exportar PDF...',
+    view: 'Vista',
+    editorOnly: 'Solo Editor',
+    splitView: 'Vista Dividida',
+    previewOnly: 'Solo Vista Previa',
+  },
+};
 
 function sendAction(window: BrowserWindow, action: MenuAction) {
   window.webContents.send(ipcChannels.menuAction, action);
 }
 
-export function createAppMenu(window: BrowserWindow) {
+export function createAppMenu(window: BrowserWindow, locale: Locale = 'en') {
+  const l = labels[locale] ?? labels.en;
+
   const template: MenuItemConstructorOptions[] = [
     {
-      label: 'File',
+      label: l.file,
       submenu: [
         {
-          label: 'New',
+          label: l.new,
           accelerator: 'CmdOrCtrl+N',
           click: () => sendAction(window, 'file:new'),
         },
         {
-          label: 'Open...',
+          label: l.open,
           accelerator: 'CmdOrCtrl+O',
           click: () => sendAction(window, 'file:open'),
         },
         { type: 'separator' },
         {
-          label: 'Save',
+          label: l.save,
           accelerator: 'CmdOrCtrl+S',
           click: () => sendAction(window, 'file:save'),
         },
         {
-          label: 'Save As...',
+          label: l.saveAs,
           accelerator: 'CmdOrCtrl+Shift+S',
           click: () => sendAction(window, 'file:save-as'),
         },
         { type: 'separator' },
         {
-          label: 'Export HTML...',
+          label: l.exportHtml,
           accelerator: 'CmdOrCtrl+Alt+H',
           click: () => sendAction(window, 'file:export-html'),
         },
         {
-          label: 'Export PDF...',
+          label: l.exportPdf,
           accelerator: 'CmdOrCtrl+Alt+P',
           click: () => sendAction(window, 'file:export-pdf'),
         },
       ],
     },
     {
-      label: 'View',
+      label: l.view,
       submenu: [
         {
-          label: 'Editor Only',
+          label: l.editorOnly,
           accelerator: 'Alt+1',
           click: () => sendAction(window, 'view:editor'),
         },
         {
-          label: 'Split View',
+          label: l.splitView,
           accelerator: 'Alt+2',
           click: () => sendAction(window, 'view:split'),
         },
         {
-          label: 'Preview Only',
+          label: l.previewOnly,
           accelerator: 'Alt+3',
           click: () => sendAction(window, 'view:preview'),
         },

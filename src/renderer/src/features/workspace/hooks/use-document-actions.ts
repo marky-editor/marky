@@ -7,6 +7,7 @@ import {
 import { renderMarkdown } from '@renderer/features/preview/lib/markdown';
 import { useWorkspaceStore } from '@renderer/features/workspace/store';
 import { useSettingsStore } from '@renderer/features/settings/store';
+import { useTranslation } from '@renderer/i18n';
 import type { MenuAction } from '@shared/types';
 
 function buildSuggestedName(name: string) {
@@ -16,6 +17,7 @@ function buildSuggestedName(name: string) {
 export function useDocumentActions(
   previewRef: React.RefObject<HTMLElement | null>,
 ) {
+  const { t } = useTranslation();
   const activeDocument = useWorkspaceStore((state) => state.document);
   const setDocument = useWorkspaceStore((state) => state.setDocument);
   const createUntitledDocument = useWorkspaceStore(
@@ -45,7 +47,7 @@ export function useDocumentActions(
       if (!result.canceled) {
         markSaved(result.path);
         setNotice(
-          mode === 'save' ? 'Document saved.' : 'Document saved as new file.',
+          mode === 'save' ? t('notice.saved') : t('notice.savedAs'),
           'success',
         );
       }
@@ -56,6 +58,7 @@ export function useDocumentActions(
       activeDocument.path,
       markSaved,
       setNotice,
+      t,
     ],
   );
 
@@ -88,7 +91,7 @@ export function useDocumentActions(
 
       if (!result.canceled) {
         setNotice(
-          kind === 'html' ? 'HTML exported.' : 'PDF exported.',
+          kind === 'html' ? t('notice.htmlExported') : t('notice.pdfExported'),
           'success',
         );
       }
@@ -99,6 +102,7 @@ export function useDocumentActions(
       previewRef,
       setNotice,
       settings,
+      t,
     ],
   );
 
@@ -108,13 +112,13 @@ export function useDocumentActions(
       if (opened) {
         setDocument(opened);
         void window.marky.setSettings(addRecentFile(path));
-        setNotice(`Opened ${opened.name}.`, 'success');
+        setNotice(t('notice.opened', { name: opened.name }), 'success');
       } else {
         void window.marky.setSettings(removeRecentFile(path));
-        setNotice('File not found — removed from recent list.', 'info');
+        setNotice(t('notice.fileNotFound'), 'info');
       }
     },
-    [addRecentFile, removeRecentFile, setDocument, setNotice],
+    [addRecentFile, removeRecentFile, setDocument, setNotice, t],
   );
 
   const removeRecentFileAction = useCallback(
@@ -133,11 +137,11 @@ export function useDocumentActions(
       switch (action) {
         case 'file:new':
           if (!activeDocument.path) {
-            setNotice('Already editing an unsaved draft.', 'info');
+            setNotice(t('notice.alreadyUnsaved'), 'info');
             return;
           }
           createUntitledDocument();
-          setNotice('Started a fresh draft.', 'info');
+          setNotice(t('notice.freshDraft'), 'info');
           return;
         case 'file:open': {
           const opened = await window.marky.openDocument();
@@ -146,7 +150,7 @@ export function useDocumentActions(
             if (opened.path) {
               void window.marky.setSettings(addRecentFile(opened.path));
             }
-            setNotice(`Opened ${opened.name}.`, 'success');
+            setNotice(t('notice.opened', { name: opened.name }), 'success');
           }
           return;
         }
@@ -175,6 +179,7 @@ export function useDocumentActions(
       setDocument,
       setNotice,
       setViewMode,
+      t,
     ],
   );
 

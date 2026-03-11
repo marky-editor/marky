@@ -30,6 +30,7 @@ import {
   insertLink,
 } from '@renderer/features/editor/lib/toolbar-actions';
 import { useScrollSync } from '@renderer/features/editor/hooks/use-scroll-sync';
+import { I18nProvider, detectClosestLocale } from '@renderer/i18n';
 
 export function App() {
   const previewRef = useRef<HTMLDivElement | null>(null);
@@ -79,9 +80,32 @@ export function App() {
     }
   }, [isSettingsOpen, isHelpOpen]);
 
+  // Load settings and auto-detect language on first launch
+  const languageDetected = useRef(false);
   useEffect(() => {
-    void window.marky.getSettings().then(setSettings);
+    void window.marky.getSettings().then((loaded) => {
+      setSettings(loaded);
+
+      // Auto-detect language only on first launch (language still at default 'en')
+      if (!languageDetected.current && loaded.language === 'en') {
+        languageDetected.current = true;
+        void window.marky.getLocale().then((osLocale) => {
+          const detected = detectClosestLocale(osLocale);
+          if (detected !== 'en') {
+            const updated = { ...loaded, language: detected };
+            setSettings(updated);
+            void window.marky.setSettings(updated);
+            void window.marky.updateMenuLanguage(detected);
+          }
+        });
+      }
+    });
   }, [setSettings]);
+
+  // Sync native menu language whenever settings.language changes
+  useEffect(() => {
+    void window.marky.updateMenuLanguage(settings.language);
+  }, [settings.language]);
 
   useEffect(() => {
     const root = globalThis.document.documentElement;
@@ -145,82 +169,84 @@ export function App() {
   }
 
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden bg-background text-foreground">
-      <div className="app-shell-overlay" />
-      <div className="app-grain-overlay" />
+    <I18nProvider locale={settings.language}>
+      <div className="relative flex h-screen flex-col overflow-hidden bg-background text-foreground">
+        <div className="app-shell-overlay" />
+        <div className="app-grain-overlay" />
 
-      <div className="relative flex flex-1 flex-col overflow-hidden">
-        <TitleBar
-          documentName={activeDocument.name}
-          isDirty={isDirty}
-          canCreateNewDocument={canCreateNewDocument}
-          viewMode={viewMode}
-          recentFiles={recentFiles}
-          onNew={() => void handleMenuAction('file:new')}
-          onOpen={() => void handleMenuAction('file:open')}
-          onOpenRecent={(path) => void openRecentFile(path)}
-          onRemoveRecent={removeRecentFile}
-          onClearRecent={clearRecentFiles}
-          onSave={() => void saveDocument('save')}
-          onSaveAs={() => void saveDocument('save-as')}
-          onExportPdf={() => void exportDocument('pdf')}
-          onExportHtml={() => void exportDocument('html')}
-          onSettings={openDialog}
-          onHelp={openHelp}
-          onViewModeChange={setViewMode}
-        />
+        <div className="relative flex flex-1 flex-col overflow-hidden">
+          <TitleBar
+            documentName={activeDocument.name}
+            isDirty={isDirty}
+            canCreateNewDocument={canCreateNewDocument}
+            viewMode={viewMode}
+            recentFiles={recentFiles}
+            onNew={() => void handleMenuAction('file:new')}
+            onOpen={() => void handleMenuAction('file:open')}
+            onOpenRecent={(path) => void openRecentFile(path)}
+            onRemoveRecent={removeRecentFile}
+            onClearRecent={clearRecentFiles}
+            onSave={() => void saveDocument('save')}
+            onSaveAs={() => void saveDocument('save-as')}
+            onExportPdf={() => void exportDocument('pdf')}
+            onExportHtml={() => void exportDocument('html')}
+            onSettings={openDialog}
+            onHelp={openHelp}
+            onViewModeChange={setViewMode}
+          />
 
-        <main className="flex flex-1 overflow-hidden">
-          {viewMode !== 'preview' && (
-            <section
-              className={cn(
-                'app-editor-pane',
-                viewMode === 'split' && 'border-r border-border/80',
-              )}
-            >
-              <div className="app-editor-top-fade" />
-              <EditorPane
-                value={activeDocument.content}
-                onChange={setContent}
-                onReady={(view) => {
-                  editorViewRef.current = view;
-                }}
+          <main className="flex flex-1 overflow-hidden">
+            {viewMode !== 'preview' && (
+              <section
+                className={cn(
+                  'app-editor-pane',
+                  viewMode === 'split' && 'border-r border-border/80',
+                )}
+              >
+                <div className="app-editor-top-fade" />
+                <EditorPane
+                  value={activeDocument.content}
+                  onChange={setContent}
+                  onReady={(view) => {
+                    editorViewRef.current = view;
+                  }}
+                />
+              </section>
+            )}
+
+            {viewMode !== 'editor' && (
+              <section ref={previewRef} className="app-preview-pane focus:outline-none" tabIndex={-1}>
+                <div data-preview-root className="mx-auto max-w-3xl px-8 py-10">
+                  <PreviewPane markdown={activeDocument.content} />
+                </div>
+              </section>
+            )}
+          </main>
+
+          <footer
+            className={cn(
+              'flex h-14 shrink-0 items-center gap-3 border-t border-border/80 bg-background/70 px-3 backdrop-blur',
+              viewMode === 'preview' ? 'justify-end' : 'justify-between',
+            )}
+          >
+            {viewMode !== 'preview' && (
+              <EditorToolbar
+                editorViewRef={editorViewRef}
+                onRequestInsert={handleInsertRequest}
               />
-            </section>
-          )}
+            )}
+            <DocumentStatus />
+          </footer>
+        </div>
 
-          {viewMode !== 'editor' && (
-            <section ref={previewRef} className="app-preview-pane focus:outline-none" tabIndex={-1}>
-              <div data-preview-root className="mx-auto max-w-3xl px-8 py-10">
-                <PreviewPane markdown={activeDocument.content} />
-              </div>
-            </section>
-          )}
-        </main>
-
-        <footer
-          className={cn(
-            'flex h-14 shrink-0 items-center gap-3 border-t border-border/80 bg-background/70 px-3 backdrop-blur',
-            viewMode === 'preview' ? 'justify-end' : 'justify-between',
-          )}
-        >
-          {viewMode !== 'preview' && (
-            <EditorToolbar
-              editorViewRef={editorViewRef}
-              onRequestInsert={handleInsertRequest}
-            />
-          )}
-          <DocumentStatus />
-        </footer>
+        <InsertAssetDialog
+          dialog={insertDialog}
+          onClose={handleInsertDialogClose}
+          onInsert={handleInsertDialogSubmit}
+        />
+        <SettingsDialog />
+        <HelpDialog />
       </div>
-
-      <InsertAssetDialog
-        dialog={insertDialog}
-        onClose={handleInsertDialogClose}
-        onInsert={handleInsertDialogSubmit}
-      />
-      <SettingsDialog />
-      <HelpDialog />
-    </div>
+    </I18nProvider>
   );
 }

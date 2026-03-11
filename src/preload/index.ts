@@ -3,6 +3,7 @@ import { ipcChannels, type MarkyApi } from '@shared/contracts';
 import type {
   AppSettings,
   ExportPayload,
+  Locale,
   MenuAction,
   SaveDocumentPayload,
 } from '@shared/types';
@@ -37,6 +38,9 @@ const api: MarkyApi = {
   getSettings: () => ipcRenderer.invoke(ipcChannels.settingsGet),
   setSettings: (settings: AppSettings) =>
     ipcRenderer.invoke(ipcChannels.settingsSet, settings),
+  getLocale: () => ipcRenderer.invoke(ipcChannels.getLocale),
+  updateMenuLanguage: (locale: Locale) =>
+    ipcRenderer.invoke(ipcChannels.updateMenuLanguage, locale),
 };
 
 contextBridge.exposeInMainWorld('marky', api);

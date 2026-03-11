@@ -2,6 +2,8 @@ export type ViewMode = 'editor' | 'split' | 'preview';
 
 export type Platform = 'windows' | 'macos' | 'linux';
 
+export type Locale = 'en' | 'pt-BR' | 'es';
+
 export type DocumentHandle = {
   path: string | null;
   name: string;
@@ -27,6 +29,7 @@ export type PdfMargins = {
 
 export type AppSettings = {
   theme: 'light' | 'dark';
+  language: Locale;
   exportFont: ExportFont;
   editorFontFamily: string;
   editorFontSize: number;

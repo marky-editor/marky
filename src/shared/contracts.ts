@@ -2,6 +2,7 @@ import type {
   AppSettings,
   DocumentHandle,
   ExportPayload,
+  Locale,
   MenuAction,
   SaveDocumentPayload,
   SaveResult,
@@ -21,6 +22,8 @@ export const ipcChannels = {
   windowIsMaximized: 'window:isMaximized',
   settingsGet: 'settings:get',
   settingsSet: 'settings:set',
+  getLocale: 'locale:get',
+  updateMenuLanguage: 'menu:update-language',
 } as const;
 
 export type MarkyApi = {
@@ -37,4 +40,6 @@ export type MarkyApi = {
   windowIsMaximized: () => Promise<boolean>;
   getSettings: () => Promise<AppSettings>;
   setSettings: (settings: AppSettings) => Promise<void>;
+  getLocale: () => Promise<string>;
+  updateMenuLanguage: (locale: Locale) => Promise<void>;
 };

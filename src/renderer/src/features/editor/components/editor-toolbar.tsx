@@ -25,6 +25,8 @@ import {
   type ToolbarActionId,
 } from '../lib/toolbar-actions';
 import { useEditorStore, type FormattingState } from '../store';
+import { useTranslation } from '@renderer/i18n';
+import type { TranslationKeys } from '@renderer/i18n';
 
 const isMac =
   typeof navigator !== 'undefined' &&
@@ -35,36 +37,36 @@ const mod = isMac ? '⌘' : 'Ctrl';
 
 const toolbarActions: Array<{
   id: ToolbarActionId;
-  label: string;
+  labelKey: keyof TranslationKeys;
   shortcut?: string;
   icon: typeof Type;
   formattingKey?: keyof FormattingState;
 }> = [
-  { id: 'bold', label: 'Bold', shortcut: `${mod}+B`, icon: Type, formattingKey: 'bold' },
-  { id: 'italic', label: 'Italic', shortcut: `${mod}+I`, icon: SquarePen, formattingKey: 'italic' },
+  { id: 'bold', labelKey: 'toolbar.bold', shortcut: `${mod}+B`, icon: Type, formattingKey: 'bold' },
+  { id: 'italic', labelKey: 'toolbar.italic', shortcut: `${mod}+I`, icon: SquarePen, formattingKey: 'italic' },
   {
     id: 'strike',
-    label: 'Strikethrough',
+    labelKey: 'toolbar.strikethrough',
     shortcut: `${mod}+Shift+X`,
     icon: Strikethrough,
     formattingKey: 'strikethrough',
   },
-  { id: 'h1', label: 'Heading 1', shortcut: `${mod}+1`, icon: Heading1, formattingKey: 'heading1' },
-  { id: 'h2', label: 'Heading 2', shortcut: `${mod}+2`, icon: Heading2, formattingKey: 'heading2' },
-  { id: 'bullet', label: 'Bullets', shortcut: `${mod}+Shift+8`, icon: List, formattingKey: 'bulletList' },
+  { id: 'h1', labelKey: 'toolbar.heading1', shortcut: `${mod}+1`, icon: Heading1, formattingKey: 'heading1' },
+  { id: 'h2', labelKey: 'toolbar.heading2', shortcut: `${mod}+2`, icon: Heading2, formattingKey: 'heading2' },
+  { id: 'bullet', labelKey: 'toolbar.bullets', shortcut: `${mod}+Shift+8`, icon: List, formattingKey: 'bulletList' },
   {
     id: 'ordered',
-    label: 'Ordered',
+    labelKey: 'toolbar.ordered',
     shortcut: `${mod}+Shift+7`,
     icon: ListOrdered,
     formattingKey: 'orderedList',
   },
-  { id: 'task', label: 'Tasks', shortcut: `${mod}+Shift+9`, icon: ListChecks },
-  { id: 'quote', label: 'Quote', shortcut: `${mod}+Shift+.`, icon: Quote, formattingKey: 'blockquote' },
-  { id: 'code', label: 'Code block', shortcut: `${mod}+E`, icon: FileCode2, formattingKey: 'code' },
-  { id: 'link', label: 'Link', shortcut: `${mod}+K`, icon: Link2, formattingKey: 'link' },
-  { id: 'image', label: 'Image', icon: Image },
-  { id: 'table', label: 'Table', icon: FileText },
+  { id: 'task', labelKey: 'toolbar.tasks', shortcut: `${mod}+Shift+9`, icon: ListChecks },
+  { id: 'quote', labelKey: 'toolbar.quote', shortcut: `${mod}+Shift+.`, icon: Quote, formattingKey: 'blockquote' },
+  { id: 'code', labelKey: 'toolbar.codeBlock', shortcut: `${mod}+E`, icon: FileCode2, formattingKey: 'code' },
+  { id: 'link', labelKey: 'toolbar.link', shortcut: `${mod}+K`, icon: Link2, formattingKey: 'link' },
+  { id: 'image', labelKey: 'toolbar.image', icon: Image },
+  { id: 'table', labelKey: 'toolbar.table', icon: FileText },
 ];
 
 const tablePickerColumns = 6;
@@ -90,6 +92,7 @@ function TablePickerButton({
 }: {
   editorViewRef: RefObject<EditorView | null>;
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [hoveredSize, setHoveredSize] = useState<TableSize | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -133,15 +136,17 @@ function TablePickerButton({
     setHoveredSize(null);
   }
 
+  const tableLabel = t('toolbar.table');
+
   return (
     <div ref={ref} className="relative">
       <Button
         variant={open ? 'subtle' : 'ghost'}
         size="icon"
         className="rounded-full text-foreground/75"
-        aria-label="Table"
+        aria-label={tableLabel}
         aria-expanded={open}
-        title="Table"
+        title={tableLabel}
         onClick={handleToggle}
       >
         <FileText className="size-4" />
@@ -193,14 +198,17 @@ function TablePickerButton({
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-4xl font-semibold tracking-tight text-foreground/35">
                 {hoveredSize
                   ? `${hoveredSize.columns} x ${hoveredSize.rows}`
-                  : 'Table'}
+                  : tableLabel}
               </div>
             </div>
 
             <div className="pt-2 text-center text-xs font-medium text-muted-foreground">
               {hoveredSize
-                ? `${hoveredSize.columns} columns x ${hoveredSize.rows} rows`
-                : 'Choose table size'}
+                ? t('toolbar.columnsRows', {
+                    columns: hoveredSize.columns,
+                    rows: hoveredSize.rows,
+                  })
+                : t('toolbar.chooseTableSize')}
             </div>
 
             <div className="absolute bottom-[-7px] left-1/2 h-3.5 w-3.5 -translate-x-1/2 rotate-45 border-b border-r border-border/80 bg-card/95" />
@@ -215,6 +223,7 @@ export function EditorToolbar({
   editorViewRef,
   onRequestInsert,
 }: EditorToolbarProps) {
+  const { t } = useTranslation();
   const formatting = useEditorStore((state) => state.formatting);
 
   function handleActionClick(action: ToolbarActionId) {
@@ -247,11 +256,12 @@ export function EditorToolbar({
 
   return (
     <div className="flex flex-1 flex-wrap items-center gap-1">
-      {toolbarActions.map(({ id, label, shortcut, icon: Icon, formattingKey }) => {
+      {toolbarActions.map(({ id, labelKey, shortcut, icon: Icon, formattingKey }) => {
         if (id === 'table') {
           return <TablePickerButton key={id} editorViewRef={editorViewRef} />;
         }
 
+        const label = t(labelKey);
         const isActive = formattingKey ? formatting[formattingKey] : false;
         const tooltip = shortcut ? `${label} (${shortcut})` : label;
         return (

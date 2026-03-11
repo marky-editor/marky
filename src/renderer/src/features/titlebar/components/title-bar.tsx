@@ -21,6 +21,8 @@ import {
 import { Button } from '@renderer/components/ui/button';
 import { cn } from '@renderer/lib/utils';
 import type { Platform, ViewMode } from '@shared/types';
+import { useTranslation } from '@renderer/i18n';
+import type { TranslationKeys } from '@renderer/i18n';
 
 function getPlatform(): Platform {
   const platform = navigator.platform.toLowerCase();
@@ -53,14 +55,14 @@ interface TitleBarProps {
   onViewModeChange: (mode: ViewMode) => void;
 }
 
-const viewOptions: Array<{
+const viewOptionKeys: Array<{
   mode: ViewMode;
-  label: string;
+  labelKey: keyof TranslationKeys;
   icon: typeof PanelLeft;
 }> = [
-  { mode: 'editor', label: 'Editor', icon: PanelLeft },
-  { mode: 'split', label: 'Split', icon: ScanSearch },
-  { mode: 'preview', label: 'Preview', icon: PanelRight },
+  { mode: 'editor', labelKey: 'titlebar.viewEditor', icon: PanelLeft },
+  { mode: 'split', labelKey: 'titlebar.viewSplit', icon: ScanSearch },
+  { mode: 'preview', labelKey: 'titlebar.viewPreview', icon: PanelRight },
 ];
 
 const drag = {
@@ -77,6 +79,7 @@ function ExportDropdown({
   onExportPdf: () => void;
   onExportHtml: () => void;
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -100,7 +103,7 @@ function ExportDropdown({
         aria-expanded={open}
       >
         <FileDown className="size-4" />
-        Export
+        {t('titlebar.export')}
         <ChevronDown
           className={cn('size-3 transition-transform', open && 'rotate-180')}
         />
@@ -116,7 +119,7 @@ function ExportDropdown({
             }}
           >
             <FileDown className="size-4 shrink-0" />
-            Export as PDF
+            {t('titlebar.exportPdf')}
           </button>
           <button
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-foreground/80 hover:bg-accent hover:text-accent-foreground"
@@ -126,7 +129,7 @@ function ExportDropdown({
             }}
           >
             <FileOutput className="size-4 shrink-0" />
-            Export as HTML
+            {t('titlebar.exportHtml')}
           </button>
         </div>
       )}
@@ -157,6 +160,7 @@ function SplitOpenButton({
   onRemoveRecent: (path: string) => void;
   onClearRecent: () => void;
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -179,14 +183,14 @@ function SplitOpenButton({
           onClick={onOpen}
         >
           <BookOpenText className="size-4 shrink-0" />
-          Open
+          {t('titlebar.open')}
         </button>
         <div className="h-4 w-px bg-border/70" />
         <button
           className="flex items-center rounded-r-full px-1.5 py-1.5 text-foreground/60 hover:text-foreground"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label="Recent files"
+          aria-label={t('titlebar.recentFiles')}
         >
           <ChevronDown
             className={cn(
@@ -202,7 +206,7 @@ function SplitOpenButton({
           {recentFiles.length === 0 ? (
             <div className="flex items-center gap-2 px-3 py-2.5 text-sm text-muted-foreground">
               <Clock className="size-3.5 shrink-0" />
-              No recent files
+              {t('titlebar.noRecentFiles')}
             </div>
           ) : (
             <>
@@ -246,7 +250,7 @@ function SplitOpenButton({
                   }}
                 >
                   <Trash2 className="size-3.5 shrink-0" />
-                  Clear recent files
+                  {t('titlebar.clearRecent')}
                 </button>
               </div>
             </>
@@ -264,6 +268,7 @@ function SplitSaveButton({
   onSave: () => void;
   onSaveAs: () => void;
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -286,14 +291,14 @@ function SplitSaveButton({
           onClick={onSave}
         >
           <Save className="size-4 shrink-0" />
-          Save
+          {t('titlebar.save')}
         </button>
         <div className="h-4 w-px bg-border/70" />
         <button
           className="flex items-center rounded-r-full px-1.5 py-1.5 text-foreground/60 hover:text-foreground"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label="More save options"
+          aria-label={t('titlebar.moreSaveOptions')}
         >
           <ChevronDown
             className={cn(
@@ -314,7 +319,7 @@ function SplitSaveButton({
             }}
           >
             <Save className="size-4 shrink-0" />
-            Save a copy
+            {t('titlebar.saveCopy')}
           </button>
         </div>
       )}
@@ -341,6 +346,7 @@ export function TitleBar({
   onHelp,
   onViewModeChange,
 }: TitleBarProps) {
+  const { t } = useTranslation();
   const platform = getPlatform();
   const isMac = platform === 'macos';
   const [isMaximized, setIsMaximized] = useState(false);
@@ -372,7 +378,7 @@ export function TitleBar({
         size="icon"
         className="h-7 w-7 rounded-full hover:bg-red-500/90 hover:text-white"
         onClick={() => window.marky.windowClose()}
-        aria-label="Close"
+        aria-label={t('titlebar.close')}
       >
         <X className="size-3.5" />
       </Button>
@@ -381,7 +387,7 @@ export function TitleBar({
         size="icon"
         className="h-7 w-7 rounded-full hover:bg-yellow-500/90 hover:text-white"
         onClick={() => window.marky.windowMinimize()}
-        aria-label="Minimize"
+        aria-label={t('titlebar.minimize')}
       >
         <Minus className="size-3.5" />
       </Button>
@@ -390,7 +396,7 @@ export function TitleBar({
         size="icon"
         className="h-7 w-7 rounded-full hover:bg-green-500/90 hover:text-white"
         onClick={() => window.marky.windowMaximize()}
-        aria-label={isMaximized ? 'Restore' : 'Maximize'}
+        aria-label={isMaximized ? t('titlebar.restore') : t('titlebar.maximize')}
       >
         {isMaximized ? (
           <Square className="size-3" />
@@ -408,7 +414,7 @@ export function TitleBar({
         size="icon"
         className="h-8 w-8 rounded-none hover:bg-accent"
         onClick={() => window.marky.windowMinimize()}
-        aria-label="Minimize"
+        aria-label={t('titlebar.minimize')}
       >
         <Minus className="size-4" />
       </Button>
@@ -417,7 +423,7 @@ export function TitleBar({
         size="icon"
         className="h-8 w-8 rounded-none hover:bg-accent"
         onClick={() => window.marky.windowMaximize()}
-        aria-label={isMaximized ? 'Restore' : 'Maximize'}
+        aria-label={isMaximized ? t('titlebar.restore') : t('titlebar.maximize')}
       >
         {isMaximized ? (
           <Square className="size-3.5" />
@@ -430,7 +436,7 @@ export function TitleBar({
         size="icon"
         className="h-8 w-8 rounded-none hover:bg-red-500 hover:text-white"
         onClick={() => window.marky.windowClose()}
-        aria-label="Close"
+        aria-label={t('titlebar.close')}
       >
         <X className="size-4" />
       </Button>
@@ -461,7 +467,7 @@ export function TitleBar({
         size="icon"
         className="rounded-full"
         onClick={onSettings}
-        aria-label="Settings"
+        aria-label={t('titlebar.settings')}
       >
         <Settings className="size-4" />
       </Button>
@@ -470,8 +476,8 @@ export function TitleBar({
         size="icon"
         className="rounded-full"
         onClick={onHelp}
-        aria-label="Keyboard shortcuts"
-        title="Keyboard shortcuts (F1)"
+        aria-label={t('titlebar.keyboardShortcuts')}
+        title={`${t('titlebar.keyboardShortcuts')} (F1)`}
       >
         <CircleHelp className="size-4" />
       </Button>
@@ -483,7 +489,7 @@ export function TitleBar({
       className="flex items-center gap-1 rounded-full border border-border/80 bg-background/60 p-1"
       style={noDrag}
     >
-      {viewOptions.map(({ mode, label, icon: Icon }) => (
+      {viewOptionKeys.map(({ mode, labelKey, icon: Icon }) => (
         <Button
           key={mode}
           variant={viewMode === mode ? 'subtle' : 'ghost'}
@@ -492,7 +498,7 @@ export function TitleBar({
           onClick={() => onViewModeChange(mode)}
         >
           <Icon className="size-4" />
-          <span className="hidden md:inline">{label}</span>
+          <span className="hidden md:inline">{t(labelKey)}</span>
         </Button>
       ))}
     </div>

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Moon, Sun, X } from 'lucide-react';
 import { Button } from '@renderer/components/ui/button';
 import { cn } from '@renderer/lib/utils';
-import type { AppSettings, ExportFont, PdfPageSize } from '@shared/types';
+import type { AppSettings, ExportFont, Locale, PdfPageSize } from '@shared/types';
 import {
   fallbackFontOptions,
   loadFontOptions,
@@ -12,6 +12,7 @@ import {
   type LoadedFontOptions,
 } from '../lib/font-options';
 import { useSettingsStore } from '../store';
+import { useTranslation } from '@renderer/i18n';
 
 const exportFontOptions: Array<{ value: ExportFont; label: string }> = [
   { value: 'system', label: 'System sans-serif' },
@@ -29,6 +30,12 @@ const pageSizeOptions: Array<{ value: PdfPageSize; label: string }> = [
   { value: 'Letter', label: 'Letter (216 x 279 mm)' },
   { value: 'Legal', label: 'Legal (216 x 356 mm)' },
   { value: 'A3', label: 'A3 (297 x 420 mm)' },
+];
+
+const languageOptions: Array<{ value: Locale; label: string }> = [
+  { value: 'en', label: 'English' },
+  { value: 'pt-BR', label: 'Português (Brasil)' },
+  { value: 'es', label: 'Español' },
 ];
 
 const inputClass =
@@ -87,6 +94,9 @@ function FontField({
   previewText,
   previewFontFamily,
   previewFontSize,
+  familyLabel,
+  sizeLabel,
+  sampleLabel,
   onChange,
   onFontSizeChange,
 }: {
@@ -98,6 +108,9 @@ function FontField({
   previewText: string;
   previewFontFamily: string;
   previewFontSize: number;
+  familyLabel: string;
+  sizeLabel: string;
+  sampleLabel: string;
   onChange: (value: string) => void;
   onFontSizeChange: (value: number) => void;
 }) {
@@ -108,7 +121,7 @@ function FontField({
       <label className={labelClass}>{label}</label>
       <div className="grid grid-cols-[minmax(0,1fr)_6.5rem] gap-2">
         <div className="min-w-0">
-          <span className={subLabelClass}>Family</span>
+          <span className={subLabelClass}>{familyLabel}</span>
           <select
             className={inputClass}
             value={value}
@@ -122,7 +135,7 @@ function FontField({
           </select>
         </div>
         <div>
-          <span className={subLabelClass}>Size</span>
+          <span className={subLabelClass}>{sizeLabel}</span>
           <select
             className={inputClass}
             aria-label={`${label} size`}
@@ -140,7 +153,7 @@ function FontField({
       <p className="text-xs leading-5 text-muted-foreground">{helper}</p>
       <div className="rounded-2xl border border-border/80 bg-background/70 p-3 shadow-sm">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/80">
-          Sample
+          {sampleLabel}
         </p>
         <p
           className="mt-2 whitespace-pre-wrap text-foreground/90"
@@ -158,6 +171,7 @@ function FontField({
 }
 
 export function SettingsDialog() {
+  const { t } = useTranslation();
   const { settings, isOpen, setSettings, closeDialog } = useSettingsStore();
   const [loadedFontChoices, setLoadedFontChoices] =
     useState<LoadedFontOptions | null>(null);
@@ -217,15 +231,15 @@ export function SettingsDialog() {
 
   const fontLibraryHint = useMemo(() => {
     if (fontChoices.usesLocalFonts && fontChoices.editorListIsFiltered) {
-      return 'Local fonts detected. Editor suggestions are filtered to likely monospaced families.';
+      return t('settings.fontHintLocalFiltered');
     }
 
     if (fontChoices.usesLocalFonts) {
-      return 'Local fonts detected. Preview shows the full list, and the editor keeps safe monospace fallbacks available.';
+      return t('settings.fontHintLocalFull');
     }
 
-    return 'Using a curated fallback font list with reliable cross-platform picks.';
-  }, [fontChoices.editorListIsFiltered, fontChoices.usesLocalFonts]);
+    return t('settings.fontHintFallback');
+  }, [fontChoices.editorListIsFiltered, fontChoices.usesLocalFonts, t]);
 
   if (!isOpen) return null;
 
@@ -234,6 +248,13 @@ export function SettingsDialog() {
     setSettings(next);
     void window.marky.setSettings(next);
   }
+
+  const marginLabels: Record<'top' | 'right' | 'bottom' | 'left', string> = {
+    top: t('settings.marginTop'),
+    right: t('settings.marginRight'),
+    bottom: t('settings.marginBottom'),
+    left: t('settings.marginLeft'),
+  };
 
   return (
     <div
@@ -248,9 +269,9 @@ export function SettingsDialog() {
       >
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <div>
-            <h2 className="text-sm font-semibold tracking-wide">Settings</h2>
+            <h2 className="text-sm font-semibold tracking-wide">{t('settings.title')}</h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              Tune the writing surface, preview, and export defaults.
+              {t('settings.subtitle')}
             </p>
           </div>
           <Button
@@ -264,9 +285,26 @@ export function SettingsDialog() {
         </div>
 
         <div className="themed-scrollbar min-h-0 space-y-6 overflow-y-auto px-5 py-5 focus:outline-none" tabIndex={0} ref={(el) => el?.focus()}>
-          <Section title="Appearance">
+          <Section title={t('settings.appearance')}>
             <div>
-              <p className={labelClass}>Theme</p>
+              <p className={labelClass}>{t('settings.language')}</p>
+              <select
+                className={inputClass}
+                value={settings.language}
+                onChange={(event) =>
+                  update({ language: event.target.value as Locale })
+                }
+              >
+                {languageOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <p className={labelClass}>{t('settings.theme')}</p>
               <div className="flex gap-2">
                 {(['light', 'dark'] as const).map((theme) => (
                   <button
@@ -284,7 +322,7 @@ export function SettingsDialog() {
                     ) : (
                       <Moon className="size-4" />
                     )}
-                    {theme === 'light' ? 'Light' : 'Dark'}
+                    {theme === 'light' ? t('settings.light') : t('settings.dark')}
                   </button>
                 ))}
               </div>
@@ -293,34 +331,40 @@ export function SettingsDialog() {
 
           <div className="border-t border-border" />
 
-          <Section title="Writing">
+          <Section title={t('settings.writing')}>
             <p className="text-xs leading-5 text-muted-foreground">
               {fontLibraryHint}
             </p>
 
             <div className="space-y-4">
               <FontField
-                label="Editor font"
+                label={t('settings.editorFont')}
                 value={settings.editorFontFamily}
                 fontSize={settings.editorFontSize}
                 options={fontChoices.editor}
-                helper="Best effort: when local font access is available, this list tries to stay monospaced."
+                helper={t('settings.editorFontHelper')}
                 previewFontFamily={toEditorFontFamilyCss(settings.editorFontFamily)}
                 previewFontSize={settings.editorFontSize}
-                previewText={'# Draft title\n- tighten the opening\n- keep the cadence calm'}
+                previewText={t('settings.editorPreviewText')}
+                familyLabel={t('settings.family')}
+                sizeLabel={t('settings.size')}
+                sampleLabel={t('settings.sample')}
                 onChange={(editorFontFamily) => update({ editorFontFamily })}
                 onFontSizeChange={(editorFontSize) => update({ editorFontSize })}
               />
 
               <FontField
-                label="Preview font"
+                label={t('settings.previewFont')}
                 value={settings.previewFontFamily}
                 fontSize={settings.previewFontSize}
                 options={fontChoices.preview}
-                helper="Applies to rendered prose and Mermaid diagram labels in the preview pane."
+                helper={t('settings.previewFontHelper')}
                 previewFontFamily={toPreviewFontFamilyCss(settings.previewFontFamily)}
                 previewFontSize={settings.previewFontSize}
-                previewText="The preview should feel calm, readable, and close to the finished document."
+                previewText={t('settings.previewPreviewText')}
+                familyLabel={t('settings.family')}
+                sizeLabel={t('settings.size')}
+                sampleLabel={t('settings.sample')}
                 onChange={(previewFontFamily) => update({ previewFontFamily })}
                 onFontSizeChange={(previewFontSize) => update({ previewFontSize })}
               />
@@ -329,9 +373,9 @@ export function SettingsDialog() {
 
           <div className="border-t border-border" />
 
-          <Section title="Export">
+          <Section title={t('settings.export')}>
             <div>
-              <label className={labelClass}>Document font</label>
+              <label className={labelClass}>{t('settings.documentFont')}</label>
               <select
                 className={inputClass}
                 value={settings.exportFont}
@@ -348,7 +392,7 @@ export function SettingsDialog() {
             </div>
 
             <div>
-              <label className={labelClass}>PDF page size</label>
+              <label className={labelClass}>{t('settings.pdfPageSize')}</label>
               <select
                 className={inputClass}
                 value={settings.pdfPageSize}
@@ -365,12 +409,12 @@ export function SettingsDialog() {
             </div>
 
             <div>
-              <p className={labelClass}>PDF margins (mm)</p>
+              <p className={labelClass}>{t('settings.pdfMargins')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {(['top', 'right', 'bottom', 'left'] as const).map((side) => (
                   <div key={side}>
-                    <label className="mb-0.5 block text-xs capitalize text-muted-foreground">
-                      {side}
+                    <label className="mb-0.5 block text-xs text-muted-foreground">
+                      {marginLabels[side]}
                     </label>
                     <input
                       type="number"
@@ -397,4 +441,3 @@ export function SettingsDialog() {
     </div>
   );
 }
-

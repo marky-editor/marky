@@ -6,6 +6,7 @@ import { registerDocumentIpc } from './ipc/document';
 import { registerExportIpc } from './ipc/export';
 import { registerWindowIpc } from './ipc/window';
 import { registerSettingsIpc } from './ipc/settings';
+import { registerLocaleIpc } from './ipc/locale';
 
 let mainWindow: ReturnType<typeof createMainWindow> | null = null;
 
@@ -22,6 +23,7 @@ async function bootstrap() {
   registerExportIpc();
   registerWindowIpc();
   registerSettingsIpc();
+  registerLocaleIpc(() => mainWindow);
 
   app.whenReady().then(() => {
     mainWindow = createMainWindow();

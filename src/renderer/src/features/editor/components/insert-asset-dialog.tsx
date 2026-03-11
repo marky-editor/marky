@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@renderer/components/ui/button';
+import { useTranslation } from '@renderer/i18n';
 
 export type InsertAssetDialogState = {
   type: 'link' | 'image';
@@ -61,6 +62,7 @@ function InsertAssetDialogContent({
   onClose,
   onInsert,
 }: InsertAssetDialogContentProps) {
+  const { t } = useTranslation();
   const urlInputRef = useRef<HTMLInputElement | null>(null);
   const [url, setUrl] = useState('');
   const [textValue, setTextValue] = useState(dialog.initialText);
@@ -85,12 +87,12 @@ function InsertAssetDialogContent({
   }, [onClose]);
 
   const isLink = dialog.type === 'link';
-  const title = isLink ? 'Insert link' : 'Insert image';
-  const textLabel = isLink ? 'Link text' : 'Alt text';
+  const title = isLink ? t('insertAsset.insertLink') : t('insertAsset.insertImage');
+  const textLabel = isLink ? t('insertAsset.linkText') : t('insertAsset.altText');
   const textPlaceholder = isLink
-    ? 'Text shown in the document'
-    : 'Describe the image';
-  const submitLabel = isLink ? 'Insert link' : 'Insert image';
+    ? t('insertAsset.linkTextPlaceholder')
+    : t('insertAsset.altTextPlaceholder');
+  const submitLabel = isLink ? t('insertAsset.insertLink') : t('insertAsset.insertImage');
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -132,7 +134,7 @@ function InsertAssetDialogContent({
             size="icon"
             className="h-7 w-7 rounded-full"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t('titlebar.close')}
           >
             <X className="size-4" />
           </Button>
@@ -141,7 +143,7 @@ function InsertAssetDialogContent({
         <form className="space-y-4 px-5 py-5" onSubmit={handleSubmit}>
           <div>
             <label className={labelClass} htmlFor="insert-asset-url">
-              URL
+              {t('insertAsset.url')}
             </label>
             <input
               id="insert-asset-url"
@@ -152,8 +154,8 @@ function InsertAssetDialogContent({
               onChange={(event) => setUrl(event.target.value)}
               placeholder={
                 isLink
-                  ? 'https://example.com'
-                  : 'https://images.example.com/photo.png'
+                  ? t('insertAsset.linkPlaceholder')
+                  : t('insertAsset.imagePlaceholder')
               }
             />
           </div>
@@ -174,7 +176,7 @@ function InsertAssetDialogContent({
 
           <div className="flex items-center justify-end gap-2 pt-2">
             <Button variant="ghost" type="button" onClick={onClose}>
-              Cancel
+              {t('insertAsset.cancel')}
             </Button>
             <Button type="submit" disabled={url.trim().length === 0}>
               {submitLabel}
@@ -185,4 +187,3 @@ function InsertAssetDialogContent({
     </div>
   );
 }
-
