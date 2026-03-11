@@ -125,6 +125,7 @@
       "category": "public.app-category.productivity"
     },
     "linux": {
+      "appId": "org.redvulps.marky",
       "target": [
         {
           "target": "AppImage",
@@ -143,8 +144,8 @@
       "category": "Office"
     },
     "flatpak": {
-      "runtimeVersion": "23.08",
-      "baseVersion": "23.08",
+      "runtimeVersion": "25.08",
+      "baseVersion": "25.08",
       "runtime": "org.freedesktop.Platform",
       "sdk": "org.freedesktop.Sdk"
     }
