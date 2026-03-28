@@ -74,6 +74,7 @@ jobs:
             - name: marky
               buildsystem: simple
               build-commands:
+                - mkdir -p /app/marky
                 - cp -r _build/* /app/marky/
                 - |
                   cat > /app/bin/marky << 'WRAPPER'
