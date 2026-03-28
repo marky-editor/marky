@@ -34,8 +34,8 @@ modules:
       # The unpacked electron-builder output (linux-unpacked directory)
       # Update the url and sha256 for each release
       - type: archive
-        url: https://github.com/marky-editor/marky/releases/download/v0.1.0/marky-0.1.0-linux-x64.tar.gz
-        sha256: TO_BE_FILLED
+        url: https://github.com/marky-editor/marky/releases/download/v0.1.0/marky-linux-x64.tar.gz
+        sha256: d9ab694487e0854d48f6dcb31eeb9c9e081927006c4ab8f74170fbb0634ce4ed
         dest: .
       - type: file
         path: io.github.marky_editor.marky.desktop
