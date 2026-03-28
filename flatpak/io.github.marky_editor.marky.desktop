@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Marky
+Comment=Apostrophe-inspired Markdown editor
+Exec=marky %F
+Icon=io.github.marky_editor.marky
+Type=Application
+Categories=Office;TextEditor;
+MimeType=text/markdown;text/x-markdown;text/plain;
+Terminal=false
+StartupWMClass=marky

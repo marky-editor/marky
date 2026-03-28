@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.marky_editor.marky</id>
+  <name>Marky</name>
+  <summary>Apostrophe-inspired Markdown editor</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+
+  <developer id="io.github.marky_editor">
+    <name>Fabio Pereira</name>
+  </developer>
+
+  <description>
+    <p>
+      Marky is a distraction-free Markdown editor featuring live preview,
+      Mermaid diagram support, and PDF/HTML export.
+    </p>
+  </description>
+
+  <url type="homepage">https://github.com/marky-editor/marky</url>
+  <url type="bugtracker">https://github.com/marky-editor/marky/issues</url>
+  <url type="vcs-browser">https://github.com/marky-editor/marky</url>
+
+  <launchable type="desktop-id">io.github.marky_editor.marky.desktop</launchable>
+
+  <provides>
+    <binary>marky</binary>
+  </provides>
+
+  <releases>
+    <release version="0.1.0" date="2026-03-28"/>
+  </releases>
+
+  <content_rating type="oars-1.1"/>
+
+  <categories>
+    <category>Office</category>
+    <category>TextEditor</category>
+  </categories>
+
+  <keywords>
+    <keyword>markdown</keyword>
+    <keyword>editor</keyword>
+    <keyword>mermaid</keyword>
+    <keyword>preview</keyword>
+  </keywords>
+</component>

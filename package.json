@@ -125,7 +125,7 @@
       "category": "public.app-category.productivity"
     },
     "linux": {
-      "appId": "org.redvulps.marky",
+      "appId": "io.github.marky_editor.marky",
       "target": [
         {
           "target": "AppImage",
