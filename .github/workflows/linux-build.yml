@@ -23,7 +23,7 @@ jobs:
 
       - run: npm run build
 
-      - run: npx electron-builder --linux AppImage --publish never
+      - run: npx electron-builder --linux AppImage dir --publish never
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
@@ -32,8 +32,20 @@ jobs:
           path: dist/*.AppImage
           if-no-files-found: error
 
+      - name: Tar unpacked build for Flatpak
+        run: tar -czf dist/marky-linux-x64.tar.gz -C dist/linux-unpacked .
+
+      - name: Upload unpacked build
+        uses: actions/upload-artifact@v4
+        with:
+          name: marky-linux-unpacked
+          path: dist/marky-linux-x64.tar.gz
+          if-no-files-found: error
+
       - name: Upload to release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.AppImage
+          files: |
+            dist/*.AppImage
+            dist/marky-linux-x64.tar.gz

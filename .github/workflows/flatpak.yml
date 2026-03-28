@@ -8,18 +8,92 @@ on:
     branches: [main]
 
 jobs:
+  build-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npx electron-builder --linux dir --publish never
+
+      - name: Upload unpacked build
+        uses: actions/upload-artifact@v4
+        with:
+          name: marky-linux-unpacked
+          path: dist/linux-unpacked
+          if-no-files-found: error
+
   flatpak:
+    needs: build-app
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-25.08
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
       options: --privileged
 
     steps:
       - uses: actions/checkout@v4
 
+      - name: Download unpacked build
+        uses: actions/download-artifact@v4
+        with:
+          name: marky-linux-unpacked
+          path: _build
+
+      - name: Prepare Flatpak manifest for CI
+        run: |
+          cd flatpak
+          # Replace the remote archive source with the local build
+          cat > io.github.marky_editor.marky.ci.yml << 'MANIFEST'
+          app-id: io.github.marky_editor.marky
+          runtime: org.freedesktop.Platform
+          runtime-version: '25.08'
+          sdk: org.freedesktop.Sdk
+          base: org.electronjs.Electron2.BaseApp
+          base-version: '25.08'
+          command: marky
+
+          finish-args:
+            - --share=ipc
+            - --socket=x11
+            - --socket=wayland
+            - --socket=pulseaudio
+            - --share=network
+            - --device=dri
+            - --filesystem=home
+            - --talk-name=org.freedesktop.FileManager1
+
+          modules:
+            - name: marky
+              buildsystem: simple
+              build-commands:
+                - cp -r _build/* /app/marky/
+                - |
+                  cat > /app/bin/marky << 'WRAPPER'
+                  #!/bin/bash
+                  exec zypak-wrapper /app/marky/marky "$@"
+                  WRAPPER
+                - chmod 755 /app/bin/marky
+                - install -Dm644 flatpak/io.github.marky_editor.marky.desktop /app/share/applications/io.github.marky_editor.marky.desktop
+                - install -Dm644 flatpak/io.github.marky_editor.marky.metainfo.xml /app/share/metainfo/io.github.marky_editor.marky.metainfo.xml
+                - install -Dm644 build/icons/256x256.png /app/share/icons/hicolor/256x256/apps/io.github.marky_editor.marky.png
+                - install -Dm644 build/icons/128x128.png /app/share/icons/hicolor/128x128/apps/io.github.marky_editor.marky.png
+                - install -Dm644 build/icons/512x512.png /app/share/icons/hicolor/512x512/apps/io.github.marky_editor.marky.png
+              sources:
+                - type: dir
+                  path: ..
+          MANIFEST
+
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          manifest-path: flatpak/io.github.marky_editor.marky.yml
+          manifest-path: flatpak/io.github.marky_editor.marky.ci.yml
           bundle: marky.flatpak
           upload-artifact: true
           cache-key: flatpak-builder-${{ github.sha }}
