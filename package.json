@@ -18,6 +18,9 @@
     "typecheck": "tsx ./scripts/typecheck.ts",
     "format": "prettier --write .",
     "check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npx playwright test",
     "commitlint": "commitlint --edit",
     "postinstall": "tsx ./scripts/postinstall.ts",
     "prepare": "tsx ./scripts/prepare.ts"
@@ -48,6 +51,7 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.39.0",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
@@ -65,13 +69,15 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
+    "jsdom": "^29.0.1",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^3.4.18",
     "tsx": "^4.19.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.3",
-    "vite": "^7.2.1"
+    "vite": "^7.2.1",
+    "vitest": "^4.1.2"
   },
   "build": {
     "appId": "com.marky.app",

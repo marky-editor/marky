@@ -68,6 +68,7 @@ function sendAction(window: BrowserWindow, action: MenuAction) {
 
 export function createAppMenu(window: BrowserWindow, locale: Locale = 'en') {
   const l = labels[locale] ?? labels.en;
+  const isDev = !!process.env.ELECTRON_RENDERER_URL;
 
   const template: MenuItemConstructorOptions[] = [
     {
@@ -127,6 +128,21 @@ export function createAppMenu(window: BrowserWindow, locale: Locale = 'en') {
         },
       ],
     },
+    ...(isDev
+      ? [
+          {
+            label: 'Developer',
+            submenu: [
+              { role: 'reload' as const, accelerator: 'CmdOrCtrl+R' },
+              { role: 'forceReload' as const, accelerator: 'CmdOrCtrl+Shift+R' },
+              {
+                role: 'toggleDevTools' as const,
+                accelerator: 'CmdOrCtrl+Shift+I',
+              },
+            ],
+          },
+        ]
+      : []),
   ];
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));

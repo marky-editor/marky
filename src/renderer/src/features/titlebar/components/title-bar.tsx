@@ -495,6 +495,7 @@ export function TitleBar({
           variant={viewMode === mode ? 'subtle' : 'ghost'}
           size="sm"
           className="rounded-full"
+          aria-label={t(labelKey)}
           onClick={() => onViewModeChange(mode)}
         >
           <Icon className="size-4" />

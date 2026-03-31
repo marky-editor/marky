@@ -278,6 +278,7 @@ export function SettingsDialog() {
             variant="ghost"
             size="icon"
             className="h-7 w-7 rounded-full"
+            aria-label={t('titlebar.close')}
             onClick={closeDialog}
           >
             <X className="size-4" />
