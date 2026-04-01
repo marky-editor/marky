@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { FolderOpen, TriangleAlert, X } from 'lucide-react';
 import { Button } from '@renderer/components/ui/button';
 import { useTranslation } from '@renderer/i18n';
 
@@ -22,6 +22,7 @@ export type InsertAssetPayload =
 
 type InsertAssetDialogProps = {
   dialog: InsertAssetDialogState;
+  documentPath?: string | null;
   onClose: () => void;
   onInsert: (payload: InsertAssetPayload) => void;
 };
@@ -34,8 +35,51 @@ const noDrag = {
   WebkitAppRegion: 'no-drag' as React.CSSProperties['WebkitAppRegion'],
 };
 
+function isLocalPath(value: string): boolean {
+  if (!value.trim()) return false;
+  try {
+    new URL(value);
+    return false;
+  } catch {
+    return !value.startsWith('data:');
+  }
+}
+
+function isOutsideDocumentFolder(
+  absoluteImagePath: string,
+  documentPath: string,
+): boolean {
+  const relative = toRelativePath(absoluteImagePath, documentPath);
+  return relative === absoluteImagePath;
+}
+
+function toRelativePath(
+  absoluteImagePath: string,
+  documentPath: string,
+): string {
+  const sep = documentPath.includes('\\') ? '\\' : '/';
+  const docDir =
+    documentPath.substring(
+      0,
+      Math.max(
+        documentPath.lastIndexOf('/'),
+        documentPath.lastIndexOf('\\'),
+      ),
+    ) + sep;
+
+  const normalizedImage = absoluteImagePath.replace(/\\/g, '/');
+  const normalizedDir = docDir.replace(/\\/g, '/');
+
+  if (normalizedImage.startsWith(normalizedDir)) {
+    return normalizedImage.substring(normalizedDir.length);
+  }
+
+  return absoluteImagePath;
+}
+
 export function InsertAssetDialog({
   dialog,
+  documentPath,
   onClose,
   onInsert,
 }: InsertAssetDialogProps) {
@@ -45,6 +89,7 @@ export function InsertAssetDialog({
     <InsertAssetDialogContent
       key={`${dialog.type}:${dialog.initialText}`}
       dialog={dialog}
+      documentPath={documentPath}
       onClose={onClose}
       onInsert={onInsert}
     />
@@ -53,12 +98,14 @@ export function InsertAssetDialog({
 
 type InsertAssetDialogContentProps = {
   dialog: Exclude<InsertAssetDialogState, null>;
+  documentPath?: string | null;
   onClose: () => void;
   onInsert: (payload: InsertAssetPayload) => void;
 };
 
 function InsertAssetDialogContent({
   dialog,
+  documentPath,
   onClose,
   onInsert,
 }: InsertAssetDialogContentProps) {
@@ -87,12 +134,33 @@ function InsertAssetDialogContent({
   }, [onClose]);
 
   const isLink = dialog.type === 'link';
+  const isImage = dialog.type === 'image';
   const title = isLink ? t('insertAsset.insertLink') : t('insertAsset.insertImage');
   const textLabel = isLink ? t('insertAsset.linkText') : t('insertAsset.altText');
   const textPlaceholder = isLink
     ? t('insertAsset.linkTextPlaceholder')
     : t('insertAsset.altTextPlaceholder');
   const submitLabel = isLink ? t('insertAsset.insertLink') : t('insertAsset.insertImage');
+  const urlLabel = isImage ? t('insertAsset.imagePathOrUrl') : t('insertAsset.url');
+
+  const imageWarning = useMemo(() => {
+    if (!isImage || !url.trim()) return null;
+    if (!isLocalPath(url)) return null;
+    if (!documentPath) return t('insertAsset.warnUnsaved');
+    if (isOutsideDocumentFolder(url, documentPath)) return t('insertAsset.warnOutsideFolder');
+    return null;
+  }, [isImage, url, documentPath, t]);
+
+  async function handleBrowse() {
+    const picked = await window.marky.pickImage();
+    if (!picked) return;
+
+    if (documentPath) {
+      setUrl(toRelativePath(picked, documentPath));
+    } else {
+      setUrl(picked);
+    }
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -143,21 +211,46 @@ function InsertAssetDialogContent({
         <form className="space-y-4 px-5 py-5" onSubmit={handleSubmit}>
           <div>
             <label className={labelClass} htmlFor="insert-asset-url">
-              {t('insertAsset.url')}
+              {urlLabel}
             </label>
-            <input
-              id="insert-asset-url"
-              ref={urlInputRef}
-              type="url"
-              className={inputClass}
-              value={url}
-              onChange={(event) => setUrl(event.target.value)}
-              placeholder={
-                isLink
-                  ? t('insertAsset.linkPlaceholder')
-                  : t('insertAsset.imagePlaceholder')
-              }
-            />
+            <div className={isImage ? 'flex gap-2' : ''}>
+              <input
+                id="insert-asset-url"
+                ref={urlInputRef}
+                type={isLink ? 'url' : 'text'}
+                className={inputClass}
+                value={url}
+                onChange={(event) => setUrl(event.target.value)}
+                placeholder={
+                  isLink
+                    ? t('insertAsset.linkPlaceholder')
+                    : t('insertAsset.imagePlaceholder')
+                }
+              />
+              {isImage && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="shrink-0"
+                  onClick={handleBrowse}
+                  aria-label={t('insertAsset.browse')}
+                >
+                  <FolderOpen className="mr-1.5 size-4" />
+                  {t('insertAsset.browse')}
+                </Button>
+              )}
+            </div>
+            {isImage && (
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                {t('insertAsset.localImageHint')}
+              </p>
+            )}
+            {imageWarning && (
+              <p className="mt-1.5 flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-400">
+                <TriangleAlert className="mt-px size-3.5 shrink-0" />
+                <span>{imageWarning}</span>
+              </p>
+            )}
           </div>
 
           <div>

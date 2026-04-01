@@ -120,6 +120,11 @@ export type TranslationKeys = {
   'insertAsset.linkTextPlaceholder': string;
   'insertAsset.altTextPlaceholder': string;
   'insertAsset.cancel': string;
+  'insertAsset.browse': string;
+  'insertAsset.imagePathOrUrl': string;
+  'insertAsset.localImageHint': string;
+  'insertAsset.warnUnsaved': string;
+  'insertAsset.warnOutsideFolder': string;
 
   // ── Document status ──────────────────────────────────────────────
   'status.words': string;

@@ -241,6 +241,7 @@ export function App() {
 
         <InsertAssetDialog
           dialog={insertDialog}
+          documentPath={activeDocument.path}
           onClose={handleInsertDialogClose}
           onInsert={handleInsertDialogSubmit}
         />

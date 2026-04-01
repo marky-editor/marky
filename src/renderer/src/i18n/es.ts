@@ -127,6 +127,11 @@ export const es: TranslationKeys = {
   'insertAsset.linkTextPlaceholder': 'Texto mostrado en el documento',
   'insertAsset.altTextPlaceholder': 'Describe la imagen',
   'insertAsset.cancel': 'Cancelar',
+  'insertAsset.browse': 'Explorar',
+  'insertAsset.imagePathOrUrl': 'Ruta o URL',
+  'insertAsset.localImageHint': 'Usa una URL o busca una imagen local. Las imágenes locales se resuelven en relación a la carpeta del documento.',
+  'insertAsset.warnUnsaved': 'Guarda el documento primero para que las imágenes locales se puedan mostrar.',
+  'insertAsset.warnOutsideFolder': 'Esta imagen está fuera de la carpeta del documento y no se mostrará en la vista previa.',
 
   // Estado del documento
   'status.words': '{count} palabras',
