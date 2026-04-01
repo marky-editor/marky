@@ -24,6 +24,7 @@ export const ipcChannels = {
   settingsSet: 'settings:set',
   getLocale: 'locale:get',
   updateMenuLanguage: 'menu:update-language',
+  pickImage: 'document:pick-image',
 } as const;
 
 export type MarkyApi = {
@@ -42,4 +43,5 @@ export type MarkyApi = {
   setSettings: (settings: AppSettings) => Promise<void>;
   getLocale: () => Promise<string>;
   updateMenuLanguage: (locale: Locale) => Promise<void>;
+  pickImage: () => Promise<string | null>;
 };

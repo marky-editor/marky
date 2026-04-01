@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, protocol } from 'electron';
 import { join } from 'node:path';
 import { createAppMenu } from './menu';
 import { createMainWindow } from './window';
@@ -7,6 +7,11 @@ import { registerExportIpc } from './ipc/export';
 import { registerWindowIpc } from './ipc/window';
 import { registerSettingsIpc } from './ipc/settings';
 import { registerLocaleIpc } from './ipc/locale';
+import { LOCAL_ASSET_SCHEME, registerLocalAssetProtocol } from './protocol';
+
+protocol.registerSchemesAsPrivileged([
+  { scheme: LOCAL_ASSET_SCHEME, privileges: { supportFetchAPI: true, stream: true } },
+]);
 
 let mainWindow: ReturnType<typeof createMainWindow> | null = null;
 
@@ -26,6 +31,7 @@ async function bootstrap() {
   registerLocaleIpc(() => mainWindow);
 
   app.whenReady().then(() => {
+    registerLocalAssetProtocol();
     mainWindow = createMainWindow();
     createAppMenu(mainWindow);
     void loadMainWindow(mainWindow);

@@ -127,6 +127,15 @@ export const ptBR: TranslationKeys = {
   'insertAsset.linkTextPlaceholder': 'Texto exibido no documento',
   'insertAsset.altTextPlaceholder': 'Descreva a imagem',
   'insertAsset.cancel': 'Cancelar',
+  'insertAsset.browse': 'Procurar',
+  'insertAsset.imagePathOrUrl': 'Caminho ou URL',
+  'insertAsset.localImageHint': 'Use uma URL ou procure uma imagem local. Imagens locais são resolvidas em relação à pasta do documento.',
+  'insertAsset.warnUnsaved': 'Salve o documento primeiro para que imagens locais possam ser exibidas.',
+  'insertAsset.warnOutsideFolder': 'Esta imagem está fora da pasta do documento e não será exibida na pré-visualização.',
+
+  // Placeholders de imagem na pré-visualização
+  'preview.imageUnsaved': 'Imagem local — salve o documento para exibi-la.',
+  'preview.imageOutsideFolder': 'Imagem fora da pasta do documento — não pode ser exibida.',
 
   // Status do documento
   'status.words': '{count} palavras',

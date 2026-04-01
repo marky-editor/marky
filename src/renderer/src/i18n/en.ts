@@ -127,6 +127,15 @@ export const en: TranslationKeys = {
   'insertAsset.linkTextPlaceholder': 'Text shown in the document',
   'insertAsset.altTextPlaceholder': 'Describe the image',
   'insertAsset.cancel': 'Cancel',
+  'insertAsset.browse': 'Browse',
+  'insertAsset.imagePathOrUrl': 'Path or URL',
+  'insertAsset.localImageHint': 'Use a URL or browse for a local image. Local images are resolved relative to the document folder.',
+  'insertAsset.warnUnsaved': 'Save the document first so local images can be displayed.',
+  'insertAsset.warnOutsideFolder': 'This image is outside the document folder and won\'t be displayed in the preview.',
+
+  // Preview image placeholders
+  'preview.imageUnsaved': 'Local image — save the document to display it.',
+  'preview.imageOutsideFolder': 'Image outside the document folder — can\'t be displayed.',
 
   // Document status
   'status.words': '{count} words',

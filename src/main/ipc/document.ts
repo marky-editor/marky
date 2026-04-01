@@ -67,6 +67,24 @@ export function registerDocumentIpc() {
     },
   );
 
+  ipcMain.handle(ipcChannels.pickImage, async () => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [
+        {
+          name: 'Images',
+          extensions: ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'avif', 'bmp', 'ico'],
+        },
+      ],
+    });
+
+    if (result.canceled || result.filePaths.length === 0) {
+      return null;
+    }
+
+    return result.filePaths[0];
+  });
+
   ipcMain.handle(
     ipcChannels.saveDocumentAs,
     async (_, payload: SaveDocumentPayload) => {

@@ -120,6 +120,15 @@ export type TranslationKeys = {
   'insertAsset.linkTextPlaceholder': string;
   'insertAsset.altTextPlaceholder': string;
   'insertAsset.cancel': string;
+  'insertAsset.browse': string;
+  'insertAsset.imagePathOrUrl': string;
+  'insertAsset.localImageHint': string;
+  'insertAsset.warnUnsaved': string;
+  'insertAsset.warnOutsideFolder': string;
+
+  // ── Preview image placeholders ───────────────────────────────────
+  'preview.imageUnsaved': string;
+  'preview.imageOutsideFolder': string;
 
   // ── Document status ──────────────────────────────────────────────
   'status.words': string;

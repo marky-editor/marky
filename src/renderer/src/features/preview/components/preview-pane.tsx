@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef } from 'react';
 import mermaid from 'mermaid';
 import { toPreviewFontFamilyCss } from '@renderer/features/settings/lib/font-options';
+import { useTranslation } from '@renderer/i18n';
 import { useSettingsStore } from '@renderer/features/settings/store';
 import { renderMarkdown } from '../lib/markdown';
 
 type PreviewPaneProps = {
   markdown: string;
+  documentPath?: string | null;
 };
 
 type MermaidTheme = 'light' | 'dark';
@@ -74,8 +76,16 @@ function ensureMermaid(
 const mermaidCache = new Map<string, string>();
 let mermaidSeq = 0;
 
-export function PreviewPane({ markdown }: PreviewPaneProps) {
+function createImagePlaceholder(message: string): HTMLElement {
+  const placeholder = document.createElement('div');
+  placeholder.className = 'image-placeholder';
+  placeholder.textContent = message;
+  return placeholder;
+}
+
+export function PreviewPane({ markdown, documentPath }: PreviewPaneProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useTranslation();
   const theme = useSettingsStore((state) => state.settings.theme);
   const previewFontFamily = useSettingsStore(
     (state) => state.settings.previewFontFamily,
@@ -83,7 +93,7 @@ export function PreviewPane({ markdown }: PreviewPaneProps) {
   const previewFontSize = useSettingsStore(
     (state) => state.settings.previewFontSize,
   );
-  const html = useMemo(() => renderMarkdown(markdown), [markdown]);
+  const html = useMemo(() => renderMarkdown(markdown, documentPath), [markdown, documentPath]);
 
   useEffect(() => {
     ensureMermaid(theme, previewFontFamily, previewFontSize);
@@ -94,6 +104,28 @@ export function PreviewPane({ markdown }: PreviewPaneProps) {
     container.innerHTML = html;
 
     let cancelled = false;
+
+    const images = Array.from(container.querySelectorAll<HTMLImageElement>('img'));
+
+    for (const img of images) {
+      const src = img.getAttribute('src') ?? '';
+      const isLocalAsset = src.startsWith('local-asset://');
+      const isUnresolved = !src.startsWith('http://') &&
+        !src.startsWith('https://') &&
+        !src.startsWith('data:') &&
+        !isLocalAsset &&
+        src.length > 0;
+
+      if (isUnresolved || isLocalAsset) {
+        img.addEventListener('error', () => {
+          if (cancelled) return;
+          const message = isUnresolved
+            ? t('preview.imageUnsaved')
+            : t('preview.imageOutsideFolder');
+          img.replaceWith(createImagePlaceholder(message));
+        }, { once: true });
+      }
+    }
 
     const blocks = Array.from(
       container.querySelectorAll<HTMLElement>('pre > code.language-mermaid'),
@@ -139,7 +171,7 @@ export function PreviewPane({ markdown }: PreviewPaneProps) {
     return () => {
       cancelled = true;
     };
-  }, [html, previewFontFamily, previewFontSize, theme]);
+  }, [html, previewFontFamily, previewFontSize, theme, t]);
 
   return <div ref={containerRef} className="preview-prose dark:prose-invert" />;
 }

@@ -41,6 +41,7 @@ const api: MarkyApi = {
   getLocale: () => ipcRenderer.invoke(ipcChannels.getLocale),
   updateMenuLanguage: (locale: Locale) =>
     ipcRenderer.invoke(ipcChannels.updateMenuLanguage, locale),
+  pickImage: () => ipcRenderer.invoke(ipcChannels.pickImage),
 };
 
 contextBridge.exposeInMainWorld('marky', api);
