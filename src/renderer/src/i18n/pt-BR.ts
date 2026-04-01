@@ -133,6 +133,10 @@ export const ptBR: TranslationKeys = {
   'insertAsset.warnUnsaved': 'Salve o documento primeiro para que imagens locais possam ser exibidas.',
   'insertAsset.warnOutsideFolder': 'Esta imagem está fora da pasta do documento e não será exibida na pré-visualização.',
 
+  // Placeholders de imagem na pré-visualização
+  'preview.imageUnsaved': 'Imagem local — salve o documento para exibi-la.',
+  'preview.imageOutsideFolder': 'Imagem fora da pasta do documento — não pode ser exibida.',
+
   // Status do documento
   'status.words': '{count} palavras',
   'status.characters': '{count} caracteres',

@@ -126,6 +126,10 @@ export type TranslationKeys = {
   'insertAsset.warnUnsaved': string;
   'insertAsset.warnOutsideFolder': string;
 
+  // ── Preview image placeholders ───────────────────────────────────
+  'preview.imageUnsaved': string;
+  'preview.imageOutsideFolder': string;
+
   // ── Document status ──────────────────────────────────────────────
   'status.words': string;
   'status.characters': string;
