@@ -2,7 +2,7 @@
 <component type="desktop-application">
   <id>io.github.marky_editor.marky</id>
   <name>Marky</name>
-  <summary>Apostrophe-inspired Markdown editor</summary>
+  <summary>A distraction-free Markdown editor</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>AGPL-3.0-or-later</project_license>
 
@@ -12,14 +12,31 @@
 
   <description>
     <p>
-      Marky is a distraction-free Markdown editor featuring live preview,
-      Mermaid diagram support, and PDF/HTML export.
+      Marky is a clean, focused Markdown editor for people who want to write
+      without distractions. Switch between editing, live preview, or both
+      side by side.
     </p>
+    <p>Features:</p>
+    <ul>
+      <li>Live preview with syntax highlighting</li>
+      <li>Mermaid diagram rendering</li>
+      <li>Export to PDF and HTML</li>
+      <li>Light and dark themes</li>
+      <li>Customizable fonts and PDF layout</li>
+      <li>Available in English, Portuguese, and Spanish</li>
+    </ul>
   </description>
 
   <url type="homepage">https://github.com/marky-editor/marky</url>
   <url type="bugtracker">https://github.com/marky-editor/marky/issues</url>
   <url type="vcs-browser">https://github.com/marky-editor/marky</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Editing Markdown with live preview</caption>
+      <image type="source" width="1248" height="702">https://raw.githubusercontent.com/marky-editor/marky/main/assets/screenshot.png</image>
+    </screenshot>
+  </screenshots>
 
   <launchable type="desktop-id">io.github.marky_editor.marky.desktop</launchable>
 
