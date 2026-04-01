@@ -27,7 +27,10 @@ export const test = base.extend<MarkyFixtures, MarkyWorkerFixtures>({
     // eslint-disable-next-line no-empty-pattern
     async ({}, use) => {
       const app = await electron.launch({
-        args: [getMainEntry()],
+        args: [
+          ...(process.env.CI ? ['--no-sandbox'] : []),
+          getMainEntry(),
+        ],
         env: { ...process.env, MARKY_FORCE_LOCALE: 'en' },
       });
       await use(app);
