@@ -4,3 +4,5 @@ out
 *.tsbuildinfo
 dist
 test-results/
+.flatpak-build
+.flatpak-builder

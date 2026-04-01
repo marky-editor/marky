@@ -1,5 +1,7 @@
 # Marky
 
+![Marky screenshot](assets/screenshot.png)
+
 Marky is an open source desktop Markdown editor for people who want a calm place to write.
 
 It takes inspiration from Apostrophe on Linux, but it is being built as a cross-platform Electron app with a modern React renderer, a live preview, a practical formatting toolbar, and fully local exports to HTML and PDF. The goal is not to turn Markdown into a heavy WYSIWYG experience. The goal is to make writing in plain Markdown feel comfortable, reliable, and a little warmer.

@@ -10,17 +10,18 @@ finish-args:
   - --share=ipc
   - --socket=x11
   - --socket=wayland
-  - --socket=pulseaudio
   - --share=network
   - --device=dri
-  - --filesystem=home
+  - --filesystem=xdg-documents
+  - --filesystem=xdg-download
+  - --filesystem=xdg-desktop
   - --talk-name=org.freedesktop.FileManager1
 
 modules:
   - name: marky
     buildsystem: simple
     build-commands:
-      - cp -r . /app/marky
+      - cp -a . /app/marky
       - install -Dm755 /dev/stdin /app/bin/marky <<'WRAPPER'
         #!/bin/bash
         exec zypak-wrapper /app/marky/marky "$@"

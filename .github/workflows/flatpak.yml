@@ -67,10 +67,11 @@ jobs:
             - --share=ipc
             - --socket=x11
             - --socket=wayland
-            - --socket=pulseaudio
             - --share=network
             - --device=dri
-            - --filesystem=home
+            - --filesystem=xdg-documents
+            - --filesystem=xdg-download
+            - --filesystem=xdg-desktop
             - --talk-name=org.freedesktop.FileManager1
 
           modules:
@@ -78,7 +79,7 @@ jobs:
               buildsystem: simple
               build-commands:
                 - mkdir -p /app/marky
-                - cp -r _build/* /app/marky/
+                - cp -a _build/* /app/marky/
                 - |
                   cat > /app/bin/marky << 'WRAPPER'
                   #!/bin/bash
