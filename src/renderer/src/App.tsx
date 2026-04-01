@@ -217,7 +217,7 @@ export function App() {
             {viewMode !== 'editor' && (
               <section ref={previewRef} className="app-preview-pane focus:outline-none" tabIndex={-1}>
                 <div data-preview-root className="mx-auto max-w-3xl px-8 py-10">
-                  <PreviewPane markdown={activeDocument.content} />
+                  <PreviewPane markdown={activeDocument.content} documentPath={activeDocument.path} />
                 </div>
               </section>
             )}

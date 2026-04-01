@@ -6,6 +6,7 @@ import { renderMarkdown } from '../lib/markdown';
 
 type PreviewPaneProps = {
   markdown: string;
+  documentPath?: string | null;
 };
 
 type MermaidTheme = 'light' | 'dark';
@@ -74,7 +75,7 @@ function ensureMermaid(
 const mermaidCache = new Map<string, string>();
 let mermaidSeq = 0;
 
-export function PreviewPane({ markdown }: PreviewPaneProps) {
+export function PreviewPane({ markdown, documentPath }: PreviewPaneProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const theme = useSettingsStore((state) => state.settings.theme);
   const previewFontFamily = useSettingsStore(
@@ -83,7 +84,7 @@ export function PreviewPane({ markdown }: PreviewPaneProps) {
   const previewFontSize = useSettingsStore(
     (state) => state.settings.previewFontSize,
   );
-  const html = useMemo(() => renderMarkdown(markdown), [markdown]);
+  const html = useMemo(() => renderMarkdown(markdown, documentPath), [markdown, documentPath]);
 
   useEffect(() => {
     ensureMermaid(theme, previewFontFamily, previewFontSize);
