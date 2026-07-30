@@ -122,9 +122,9 @@ test.describe('accessibility', () => {
       '[role="group"][aria-labelledby="settings-theme-label"]',
     );
     await expect(themeGroup.locator('button')).toHaveCount(2);
-    await expect(
-      themeGroup.locator('button[aria-pressed="true"]'),
-    ).toHaveCount(1);
+    await expect(themeGroup.locator('button[aria-pressed="true"]')).toHaveCount(
+      1,
+    );
 
     await window.keyboard.press('Escape');
   });

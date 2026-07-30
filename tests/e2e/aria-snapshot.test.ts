@@ -20,7 +20,9 @@ test.describe('aria snapshots', () => {
     const snapshot = await window.locator('[role="dialog"]').ariaSnapshot();
 
     // Every labelled group, by accessible name.
-    const groups = [...snapshot.matchAll(/- group "([^"]+)"/g)].map((m) => m[1]);
+    const groups = [...snapshot.matchAll(/- group "([^"]+)"/g)].map(
+      (m) => m[1],
+    );
     expect(groups.length).toBeGreaterThan(0);
 
     // The same text must not also sit in the tree as loose static text: the
@@ -41,7 +43,10 @@ test.describe('aria snapshots', () => {
   test('settings groups expose their controls', async ({ window }) => {
     await window.locator('button[aria-label="Settings"]').click();
 
-    const themeGroup = window.getByRole('group', { name: 'Theme', exact: true });
+    const themeGroup = window.getByRole('group', {
+      name: 'Theme',
+      exact: true,
+    });
     await expect(themeGroup).toMatchAriaSnapshot(`
       - group "Theme":
         - button "Light"
