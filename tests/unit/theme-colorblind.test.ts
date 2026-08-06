@@ -97,7 +97,7 @@ const KNOWN: Record<string, string[]> = {
   ],
   'deuteranomaly comment/constant': ['dark/amethyst'],
   'deuteranomaly comment/error': ['dark/amber'],
-  'deuteranomaly comment/function': ['light/amber', 'light/coral'],
+  'deuteranomaly comment/function': ['light/amber'],
   'deuteranomaly comment/keyword': [
     'dark/jade',
     'dark/rose',
@@ -116,14 +116,7 @@ const KNOWN: Record<string, string[]> = {
     'light/jade',
     'light/rose',
   ],
-  'deuteranomaly foreground/class': [
-    'dark/amber',
-    'dark/amethyst',
-    'dark/coral',
-    'dark/jade',
-    'dark/rose',
-    'dark/sapphire',
-  ],
+  'deuteranomaly function/error': ['dark/amber'],
   'deuteranomaly function/parameter': [
     'dark/amber',
     'dark/amethyst',
@@ -134,21 +127,9 @@ const KNOWN: Record<string, string[]> = {
   ],
   'deuteranomaly heading/comment': ['dark/amethyst', 'dark/rose'],
   'deuteranomaly heading/constant': ['dark/sapphire', 'light/sapphire'],
-  'deuteranomaly heading/error': ['light/amber', 'light/coral'],
-  'deuteranomaly heading/foreground': ['dark/jade'],
-  'deuteranomaly heading/function': [
-    'dark/amber',
-    'light/amber',
-    'light/coral',
-    'light/rose',
-  ],
+  'deuteranomaly heading/error': ['light/coral'],
+  'deuteranomaly heading/function': ['light/amber', 'light/rose'],
   'deuteranomaly heading/keyword': ['dark/jade'],
-  'deuteranomaly heading/parameter': [
-    'dark/amber',
-    'dark/coral',
-    'light/amber',
-  ],
-  'deuteranomaly heading/string': ['light/amber', 'light/coral'],
   'deuteranomaly heading/tag': ['dark/jade'],
   'deuteranomaly keyword/class': ['dark/amber', 'dark/jade'],
   'deuteranomaly parameter/error': [
@@ -165,29 +146,21 @@ const KNOWN: Record<string, string[]> = {
     'light/rose',
     'light/sapphire',
   ],
-  'deuteranomaly string/error': ['light/amber', 'light/jade'],
+  'deuteranomaly string/error': ['light/amber'],
   'deuteranomaly string/function': [
-    'dark/amber',
     'dark/amethyst',
     'dark/coral',
     'dark/jade',
     'dark/rose',
     'dark/sapphire',
+    'light/coral',
     'light/jade',
   ],
-  'deuteranomaly string/parameter': [
-    'dark/amber',
-    'dark/amethyst',
-    'dark/coral',
-    'dark/jade',
-    'dark/rose',
-    'dark/sapphire',
-    'light/amber',
-    'light/rose',
-  ],
+  'deuteranomaly string/parameter': ['light/amber'],
   'protanomaly comment/class': ['light/rose', 'light/sapphire'],
   'protanomaly comment/constant': ['dark/amethyst', 'dark/rose'],
   'protanomaly comment/error': ['dark/amber', 'light/amber'],
+  'protanomaly comment/function': ['light/amber'],
   'protanomaly comment/keyword': [
     'dark/amethyst',
     'dark/rose',
@@ -209,26 +182,15 @@ const KNOWN: Record<string, string[]> = {
     'dark/rose',
     'dark/sapphire',
   ],
-  'protanomaly function/parameter': [
-    'dark/amber',
-    'dark/amethyst',
-    'dark/coral',
-    'dark/jade',
-    'dark/rose',
-    'dark/sapphire',
-    'light/amber',
-    'light/amethyst',
-    'light/coral',
-    'light/jade',
-    'light/sapphire',
-  ],
+  'protanomaly function/error': ['light/amber', 'light/coral', 'light/jade'],
+  'protanomaly function/parameter': ['dark/amber', 'light/coral', 'light/jade'],
   'protanomaly heading/comment': ['dark/amethyst', 'dark/rose'],
   'protanomaly heading/constant': ['dark/sapphire', 'light/sapphire'],
-  'protanomaly heading/error': ['light/coral'],
+  'protanomaly heading/error': ['light/amber', 'light/coral'],
   'protanomaly heading/foreground': ['dark/jade'],
   'protanomaly heading/function': ['dark/amber', 'light/amber', 'light/coral'],
   'protanomaly heading/parameter': ['light/amber'],
-  'protanomaly heading/string': ['light/amber', 'light/coral'],
+  'protanomaly heading/string': ['light/amber'],
   'protanomaly keyword/constant': ['dark/amber', 'dark/jade'],
   'protanomaly parameter/error': [
     'light/amethyst',
@@ -251,20 +213,10 @@ const KNOWN: Record<string, string[]> = {
     'dark/jade',
     'dark/rose',
     'dark/sapphire',
-    'light/amber',
   ],
-  'protanomaly string/parameter': [
-    'light/amber',
-    'light/amethyst',
-    'light/coral',
-    'light/jade',
-    'light/rose',
-    'light/sapphire',
-  ],
+  'protanomaly string/parameter': ['light/amber', 'light/rose'],
   'tritanomaly comment/class': ['light/sapphire'],
   'tritanomaly comment/constant': ['dark/amethyst'],
-  'tritanomaly comment/function': ['light/jade'],
-  'tritanomaly comment/string': ['light/coral'],
   'tritanomaly error/tag': [
     'dark/amber',
     'dark/amethyst',
@@ -288,10 +240,7 @@ const KNOWN: Record<string, string[]> = {
     'dark/jade',
     'dark/rose',
     'dark/sapphire',
-    'light/amber',
     'light/amethyst',
-    'light/coral',
-    'light/jade',
     'light/rose',
     'light/sapphire',
   ],
@@ -303,9 +252,9 @@ const KNOWN: Record<string, string[]> = {
   ],
   'tritanomaly heading/error': ['dark/rose', 'light/rose'],
   'tritanomaly heading/foreground': ['dark/amber'],
-  'tritanomaly heading/function': ['dark/jade', 'light/jade'],
-  'tritanomaly heading/keyword': ['dark/coral', 'light/rose'],
-  'tritanomaly heading/tag': ['dark/coral', 'light/rose'],
+  'tritanomaly heading/function': ['dark/jade'],
+  'tritanomaly heading/keyword': ['light/rose'],
+  'tritanomaly heading/tag': ['light/rose'],
   'tritanomaly keyword/error': [
     'dark/amber',
     'dark/amethyst',
@@ -313,30 +262,25 @@ const KNOWN: Record<string, string[]> = {
     'dark/jade',
     'dark/rose',
     'dark/sapphire',
+    'light/rose',
   ],
   'tritanomaly keyword/parameter': [
-    'light/amber',
     'light/amethyst',
     'light/coral',
     'light/jade',
-    'light/rose',
     'light/sapphire',
   ],
   'tritanomaly parameter/error': [
     'dark/amber',
     'dark/jade',
     'light/amber',
-    'light/amethyst',
     'light/coral',
     'light/jade',
-    'light/sapphire',
   ],
   'tritanomaly parameter/tag': [
-    'light/amber',
     'light/amethyst',
     'light/coral',
     'light/jade',
-    'light/rose',
     'light/sapphire',
   ],
 };
@@ -437,14 +381,17 @@ describe('syntax colours under colour vision deficiency', () => {
   // wavy underline; these are distinguishable by hue alone, so a reader with
   // colour vision deficiency has nothing else to go on.
   //
-  // 125 of 220, against 124 before this palette moved. Holding it flat was not
-  // free: raising dark tokens for contrast pushed it to 136, and light strings
-  // were then darkened further than contrast alone required to bring it back.
-  it('adds no colour-only collapse beyond the recorded 125', () => {
+  // 80 of 175. Was 125 while the palette only had to clear contrast; solving
+  // the token lightnesses against each other as well took out 45 of them.
+  //
+  // 80 is an upper bound rather than a floor. The search moved lightness only,
+  // left hue and saturation alone, and hill-climbs from the current values, so
+  // it cannot reach an arrangement that needs a worse step first.
+  it('adds no colour-only collapse beyond the recorded 80', () => {
     const bare = Object.entries(collapsed)
       .filter(([conflict]) => !isMitigated(conflict))
       .reduce((total, [, palettes]) => total + palettes.length, 0);
-    expect(bare).toBeLessThanOrEqual(125);
+    expect(bare).toBeLessThanOrEqual(80);
   });
 
   it('keeps error distinguishable by something other than hue', () => {
