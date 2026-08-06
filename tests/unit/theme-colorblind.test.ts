@@ -333,21 +333,51 @@ function collapsedConflicts(): Record<string, string[]> {
 }
 
 /**
- * Non-colour cues from highlight-style.ts. A pair whose two tokens carry
- * different cues stays tellable apart even when the colours collapse, so it is
- * not the same risk as a pair distinguished by hue alone.
+ * The non-colour marks each syntax colour appears with, read off
+ * highlight-style.ts. A pair survives a hue collapse only when the two colours
+ * can never be drawn the same way.
  *
- * Keep in step with markyHighlightStyle: a cue removed there without being
- * removed here would overstate how safe the palette is.
+ * A colour is not simply marked or unmarked. Each one serves several tags and
+ * those tags do not all carry the same mark: the comment colour is italic on a
+ * comment and plain on a fence marker, the heading colour is bold on a heading
+ * and underlined on a link. So a colour is the set of marks it appears with,
+ * and a pair is safe only when those sets are disjoint. Where both colours can
+ * appear plain, a reader who cannot separate the hues sees two identical runs,
+ * whatever either colour does elsewhere.
+ *
+ * This replaced a version recording one mark per colour, which read the
+ * stylesheet 18 collapses safer than it is.
+ *
+ * Keep in step with markyHighlightStyle. '' is no mark.
  */
-const NON_COLOUR_CUES: Record<string, string> = {
-  comment: 'italic',
-  error: 'wavy underline',
+const MARKS: Record<string, readonly string[]> = {
+  // t.heading is bold; t.link and t.url take the same colour underlined.
+  heading: ['bold', 'underline'],
+  // t.strong bold, t.emphasis italic, operators and punctuation plain.
+  foreground: ['bold', 'italic', ''],
+  // t.comment and t.quote are italic. t.processingInstruction and t.meta are
+  // not, and they draw the fence markers and the # of a heading.
+  comment: ['italic', ''],
+  // Shared with t.monospace, so a mark here would also mark inline code.
+  string: [''],
+  // t.list draws bullet markers in this colour. A mark here marks every bullet
+  // in the document, which is why the second bold went on tag instead.
+  keyword: [''],
+  // Code only, never markdown.
+  function: ['bold'],
+  class: [''],
+  constant: [''],
+  parameter: [''],
+  // t.tagName and t.angleBracket only, so this mark is invisible to markdown.
+  tag: ['bold'],
+  error: ['wavy'],
 };
 
 function isMitigated(conflict: string): boolean {
   const [a, b] = conflict.split(' ')[1].split('/');
-  return (NON_COLOUR_CUES[a] ?? '') !== (NON_COLOUR_CUES[b] ?? '');
+  const marksA = MARKS[a] ?? [''];
+  const marksB = MARKS[b] ?? [''];
+  return !marksA.some((mark) => marksB.includes(mark));
 }
 
 describe('syntax colours under colour vision deficiency', () => {
@@ -377,21 +407,25 @@ describe('syntax colours under colour vision deficiency', () => {
     expect(stale).toEqual([]);
   });
 
-  // The count that actually matters. Everything else survives on italics or a
-  // wavy underline; these are distinguishable by hue alone, so a reader with
-  // colour vision deficiency has nothing else to go on.
+  // The count that actually matters: pairs a reader has nothing but hue to go
+  // on for.
   //
-  // 80 of 175. Was 125 while the palette only had to clear contrast; solving
-  // the token lightnesses against each other as well took out 45 of them.
+  // 54 of 175. The history is worth keeping straight, because two of these
+  // numbers were measured with a model that was wrong:
   //
-  // 80 is an upper bound rather than a floor. The search moved lightness only,
-  // left hue and saturation alone, and hill-climbs from the current values, so
-  // it cannot reach an arrangement that needs a worse step first.
-  it('adds no colour-only collapse beyond the recorded 80', () => {
+  //   125  palette solved for contrast only, flat cue model
+  //    80  palette solved against itself as well, flat cue model
+  //    98  same palette, once the cue model stopped reading one mark per colour
+  //    54  bold on function and on tag
+  //
+  // 54 is an upper bound rather than a floor. The palette search moved
+  // lightness only and hill-climbs from the current values, so it cannot reach
+  // an arrangement that needs a worse step on the way.
+  it('adds no colour-only collapse beyond the recorded 54', () => {
     const bare = Object.entries(collapsed)
       .filter(([conflict]) => !isMitigated(conflict))
       .reduce((total, [, palettes]) => total + palettes.length, 0);
-    expect(bare).toBeLessThanOrEqual(80);
+    expect(bare).toBeLessThanOrEqual(54);
   });
 
   it('keeps error distinguishable by something other than hue', () => {
