@@ -42,9 +42,14 @@ export const markyHighlightStyle = HighlightStyle.define([
   { tag: t.comment, color: color.comment, fontStyle: 'italic' },
   { tag: [t.keyword, t.modifier, t.operatorKeyword], color: color.keyword },
   { tag: [t.string, t.special(t.string), t.regexp], color: color.string },
+  // Bold, not just coloured: function names sit in more colour-vision
+  // collapses than any other token, and weight is the one cue that costs a
+  // reader nothing. Safe to mark because these tags are code-only, so no
+  // markdown ever renders bolder than it did.
   {
     tag: [t.function(t.variableName), t.function(t.propertyName)],
     color: color.function,
+    fontWeight: '700',
   },
   { tag: [t.typeName, t.className, t.namespace], color: color.class },
   {
@@ -55,7 +60,10 @@ export const markyHighlightStyle = HighlightStyle.define([
     tag: [t.propertyName, t.attributeName, t.variableName],
     color: color.parameter,
   },
-  { tag: [t.tagName, t.angleBracket], color: color.tag },
+  // Also bold, and for the same reason. Chosen over keyword, which scores the
+  // same but shares its colour with t.list and would put every bullet marker
+  // in the document in bold.
+  { tag: [t.tagName, t.angleBracket], color: color.tag, fontWeight: '700' },
   { tag: [t.operator, t.punctuation, t.separator], color: color.foreground },
   // Wavy underline rather than colour alone: error collapses into keyword, tag,
   // string and parameter once simulated for colour vision deficiency, and it is
