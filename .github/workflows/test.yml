@@ -8,6 +8,24 @@ on:
   workflow_dispatch:
 
 jobs:
+  # Formatting drifts because npm run format is only ever run by hand, and then
+  # only over the files someone happens to be editing. Checked in CI rather than
+  # in the pre-commit hook, which can be skipped.
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx prettier --check .
+
   unit-tests:
     runs-on: ubuntu-latest
 
