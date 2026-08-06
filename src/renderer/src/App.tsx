@@ -148,6 +148,7 @@ export function App() {
             recentFiles={recentFiles}
             onNew={() => void handleMenuAction('file:new')}
             onOpen={() => void handleMenuAction('file:open')}
+            onReload={() => void handleMenuAction('file:reload')}
             onOpenRecent={(path) => void openRecentFile(path)}
             onRemoveRecent={removeRecentFile}
             onClearRecent={clearRecentFiles}

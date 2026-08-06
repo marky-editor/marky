@@ -5,6 +5,7 @@ import {
   Clock,
   FileDown,
   FileOutput,
+  RefreshCw,
   Save,
   Trash2,
   X,
@@ -12,9 +13,28 @@ import {
 import { Button } from '@renderer/components/ui/button';
 import { cn } from '@renderer/lib/utils';
 import { basename, dirname } from '@renderer/lib/paths';
+import { modKey } from '@renderer/lib/platform';
 import { noDrag } from '@renderer/lib/window-region';
 import { useDismissOnOutside } from '@renderer/lib/use-dismiss-on-outside';
 import { useTranslation } from '@renderer/i18n';
+
+export function ReloadButton({ onReload }: { onReload: () => void }) {
+  const { t } = useTranslation();
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="rounded-full"
+      style={noDrag}
+      onClick={onReload}
+      aria-label={t('titlebar.reload')}
+      title={`${t('titlebar.reload')} (${modKey}+R)`}
+    >
+      <RefreshCw className="size-4" />
+    </Button>
+  );
+}
 
 export function ExportDropdown({
   onExportPdf,

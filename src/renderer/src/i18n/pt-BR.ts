@@ -46,6 +46,7 @@ export const ptBR: TranslationKeys = {
   // Barra de título
   'titlebar.new': 'Novo documento',
   'titlebar.open': 'Abrir',
+  'titlebar.reload': 'Recarregar',
   'titlebar.save': 'Salvar',
   'titlebar.saveCopy': 'Salvar uma cópia',
   'titlebar.export': 'Exportar',
@@ -106,6 +107,7 @@ export const ptBR: TranslationKeys = {
   'help.saveCopy': 'Salvar uma cópia',
   'help.exportHtml': 'Exportar HTML',
   'help.exportPdf': 'Exportar PDF',
+  'help.reload': 'Recarregar do disco',
   'help.editorOnly': 'Somente editor',
   'help.splitView': 'Visualização dividida',
   'help.previewOnly': 'Somente visualização',
@@ -170,6 +172,12 @@ export const ptBR: TranslationKeys = {
   'notice.opened': '{name} aberto.',
   'notice.fileNotFound':
     'Arquivo não encontrado — removido da lista de recentes.',
+  'notice.reloaded': 'Arquivo recarregado do disco.',
+  'notice.nothingToReload':
+    'Nenhum arquivo salvo está aberto — nada para recarregar.',
+  'notice.reloadBlockedUnsaved':
+    'Há alterações não salvas — salve-as ou desfaça-as antes de recarregar do disco.',
+  'notice.reloadFileNotFound': 'O arquivo não existe mais no disco.',
 
   // Controles compartilhados
   'combobox.noMatches': 'Nenhum resultado',

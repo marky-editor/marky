@@ -38,6 +38,7 @@ export type TranslationKeys = {
   'titlebar.removeRecent': string;
   'titlebar.new': string;
   'titlebar.open': string;
+  'titlebar.reload': string;
   'titlebar.save': string;
   'titlebar.saveCopy': string;
   'titlebar.export': string;
@@ -97,6 +98,7 @@ export type TranslationKeys = {
   'help.saveCopy': string;
   'help.exportHtml': string;
   'help.exportPdf': string;
+  'help.reload': string;
   'help.editorOnly': string;
   'help.splitView': string;
   'help.previewOnly': string;
@@ -156,6 +158,10 @@ export type TranslationKeys = {
   'notice.freshDraft': string;
   'notice.opened': string;
   'notice.fileNotFound': string;
+  'notice.reloaded': string;
+  'notice.nothingToReload': string;
+  'notice.reloadBlockedUnsaved': string;
+  'notice.reloadFileNotFound': string;
 
   // Shared controls
   'combobox.noMatches': string;

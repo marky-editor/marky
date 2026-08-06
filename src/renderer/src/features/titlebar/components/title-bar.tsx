@@ -19,6 +19,7 @@ import type { TranslationKeys } from '@renderer/i18n';
 import type { ViewMode } from '@shared/types';
 import {
   ExportDropdown,
+  ReloadButton,
   SplitOpenButton,
   SplitSaveButton,
 } from './file-actions';
@@ -31,6 +32,7 @@ interface TitleBarProps {
   recentFiles: string[];
   onNew: () => void;
   onOpen: () => void;
+  onReload: () => void;
   onOpenRecent: (path: string) => void;
   onRemoveRecent: (path: string) => void;
   onClearRecent: () => void;
@@ -61,6 +63,7 @@ export function TitleBar({
   recentFiles,
   onNew,
   onOpen,
+  onReload,
   onOpenRecent,
   onRemoveRecent,
   onClearRecent,
@@ -187,6 +190,7 @@ export function TitleBar({
         onRemoveRecent={onRemoveRecent}
         onClearRecent={onClearRecent}
       />
+      <ReloadButton onReload={onReload} />
       <SplitSaveButton onSave={onSave} onSaveAs={onSaveAs} />
       <ExportDropdown onExportPdf={onExportPdf} onExportHtml={onExportHtml} />
       <Button

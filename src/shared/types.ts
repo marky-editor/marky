@@ -68,6 +68,7 @@ export type SaveResult = {
 export type MenuAction =
   | 'file:new'
   | 'file:open'
+  | 'file:reload'
   | 'file:save'
   | 'file:save-as'
   | 'file:export-html'

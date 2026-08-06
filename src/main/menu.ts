@@ -10,6 +10,7 @@ type MenuLabels = {
   file: string;
   new: string;
   open: string;
+  reload: string;
   save: string;
   saveAs: string;
   exportHtml: string;
@@ -25,6 +26,7 @@ const labels: Record<Locale, MenuLabels> = {
     file: 'File',
     new: 'New',
     open: 'Open...',
+    reload: 'Reload',
     save: 'Save',
     saveAs: 'Save As...',
     exportHtml: 'Export HTML...',
@@ -38,6 +40,7 @@ const labels: Record<Locale, MenuLabels> = {
     file: 'Arquivo',
     new: 'Novo',
     open: 'Abrir...',
+    reload: 'Recarregar',
     save: 'Salvar',
     saveAs: 'Salvar como...',
     exportHtml: 'Exportar HTML...',
@@ -51,6 +54,7 @@ const labels: Record<Locale, MenuLabels> = {
     file: 'Archivo',
     new: 'Nuevo',
     open: 'Abrir...',
+    reload: 'Recargar',
     save: 'Guardar',
     saveAs: 'Guardar como...',
     exportHtml: 'Exportar HTML...',
@@ -83,6 +87,11 @@ export function createAppMenu(window: BrowserWindow, locale: Locale = 'en') {
           label: l.open,
           accelerator: 'CmdOrCtrl+O',
           click: () => sendAction(window, 'file:open'),
+        },
+        {
+          label: l.reload,
+          accelerator: 'CmdOrCtrl+R',
+          click: () => sendAction(window, 'file:reload'),
         },
         { type: 'separator' },
         {
@@ -133,10 +142,12 @@ export function createAppMenu(window: BrowserWindow, locale: Locale = 'en') {
           {
             label: 'Developer',
             submenu: [
-              { role: 'reload' as const, accelerator: 'CmdOrCtrl+R' },
               {
+                // Deliberately not on any +R combo: CmdOrCtrl+R is now
+                // reload-from-disk, and a neighbouring shortcut that instead
+                // restarts the renderer and wipes state is a trap.
                 role: 'forceReload' as const,
-                accelerator: 'CmdOrCtrl+Shift+R',
+                accelerator: 'CmdOrCtrl+Shift+F5',
               },
               {
                 role: 'toggleDevTools' as const,

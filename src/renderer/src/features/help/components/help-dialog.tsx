@@ -54,6 +54,7 @@ const editorShortcuts: ShortcutEntry[] = [
 const fileShortcuts: ShortcutEntry[] = [
   { keys: `${mod}+N`, labelKey: 'help.newDocument' },
   { keys: `${mod}+O`, labelKey: 'help.openFile' },
+  { keys: `${mod}+R`, labelKey: 'help.reload' },
   { keys: `${mod}+S`, labelKey: 'help.save' },
   { keys: `${mod}+Shift+S`, labelKey: 'help.saveCopy' },
   { keys: `${mod}+Alt+H`, labelKey: 'help.exportHtml' },

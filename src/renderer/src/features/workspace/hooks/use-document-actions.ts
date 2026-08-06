@@ -1,6 +1,10 @@
 import { useCallback, useEffect } from 'react';
 import { buildExportHtml } from '@renderer/features/export/lib/build-export-html';
-import { useWorkspaceStore } from '@renderer/features/workspace/store';
+import { reloadDocument } from '@renderer/features/workspace/lib/reload-document';
+import {
+  selectIsDirty,
+  useWorkspaceStore,
+} from '@renderer/features/workspace/store';
 import { useSettingsStore } from '@renderer/features/settings/store';
 import { useTranslation } from '@renderer/i18n';
 import type { MenuAction } from '@shared/types';
@@ -14,6 +18,7 @@ export function useDocumentActions(
 ) {
   const { t } = useTranslation();
   const activeDocument = useWorkspaceStore((state) => state.document);
+  const isDirty = useWorkspaceStore(selectIsDirty);
   const setDocument = useWorkspaceStore((state) => state.setDocument);
   const createUntitledDocument = useWorkspaceStore(
     (state) => state.createUntitledDocument,
@@ -128,6 +133,29 @@ export function useDocumentActions(
           }
           return;
         }
+        case 'file:reload': {
+          const outcome = await reloadDocument({
+            path: activeDocument.path,
+            isDirty,
+            readDocument: window.marky.openDocumentFromPath,
+          });
+          switch (outcome.status) {
+            case 'nothing-to-reload':
+              setNotice(t('notice.nothingToReload'), 'info');
+              return;
+            case 'blocked-unsaved':
+              setNotice(t('notice.reloadBlockedUnsaved'), 'info');
+              return;
+            case 'file-not-found':
+              setNotice(t('notice.reloadFileNotFound'), 'info');
+              return;
+            case 'reloaded':
+              setDocument(outcome.document);
+              setNotice(t('notice.reloaded'), 'success');
+              return;
+          }
+          return;
+        }
         case 'file:save':
           return saveDocument('save');
         case 'file:save-as':
@@ -149,6 +177,7 @@ export function useDocumentActions(
       addRecentFile,
       createUntitledDocument,
       exportDocument,
+      isDirty,
       saveDocument,
       setDocument,
       setNotice,
